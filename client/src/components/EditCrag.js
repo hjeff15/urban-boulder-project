@@ -31,12 +31,11 @@ export default class EditCrag extends Component {
 	}
 
 	async postData(crag, id) {
-		console.log(this);
 		const request = await axios
 			.post(`http://localhost:4000/crags/${id}/edit`, crag)
-			.then(this.props.history.push(`/crag/${this.state.crag.data.slug}`))
 			.then((res) => {
-				return res.data;
+				console.log(res);
+				this.props.history.push(`/crag/${res.data.slug}`);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -52,7 +51,6 @@ export default class EditCrag extends Component {
 				{this.state.loaded && (
 					<Create
 						cragCardInfo={this.state.crag}
-						updatedPage={this.updatedPage}
 						postData={this.postData}
 					/>
 				)}

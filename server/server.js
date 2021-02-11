@@ -1,4 +1,8 @@
 require('dotenv').config({ path: './variables.env' });
+// Import all our models here
+require('./models/Crag');
+require('./models/User');
+
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -6,41 +10,61 @@ const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
 const passport = require('passport');
 const promisify = require('es6-promisify');
 const errorHandlers = require('./handlers/errorHandlers');
+require('./handlers/passport');
 
-const routes = require('./routes/index');
+//MongoDB
+mongoose.connect(process.env.DATABASE, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	// useFindAndModify: false,
+});
+mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
+mongoose.connection.on('error', (err) => {
+	console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
+});
+// See mongoose errors
+// mongoose.set('debug', true);
+// See this link for the reason the below is here - https://stackoverflow.com/questions/51960171/node63208-deprecationwarning-collection-ensureindex-is-deprecated-use-creat
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 app.use(cors());
 
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.set('view engine', 'pug');
+// app.set('view engine', 'json');
 
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.DATABASE, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
-mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
-mongoose.connection.on('error', (err) => {
-	console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
-});
-
-// Import all our models here
-require('./models/Crag');
-
+const routes = require('./routes/index');
 // Exposes a bunch of methods for validating data. Used heavily on userController.validateRegister
 app.use(expressValidator());
 
 // populates req.cookies with any cookies that came along with the request
 app.use(cookieParser());
+
+// Sessions allow us to store data on visitors from request to request
+// This keeps users logged in and allows us to send flash messages
+app.use(
+	session({
+		secret: process.env.SECRET,
+		key: process.env.KEY,
+		resave: false,
+		saveUninitialized: false,
+		store: new MongoStore({ mongooseConnection: mongoose.connection }),
+	})
+);
 
 // // Passport JS is what we use to handle our logins
 app.use(passport.initialize());
@@ -77,7 +101,7 @@ if (app.get('env') === 'development') {
 }
 
 // production error handler
-app.use(errorHandlers.productionErrors);
+// app.use(errorHandlers.productionErrors);
 
 app.listen(process.env.PORT, function () {
 	console.log('Server is running on Port: ' + process.env.PORT);

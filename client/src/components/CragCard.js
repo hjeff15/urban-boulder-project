@@ -18,10 +18,6 @@ export default class CragCard extends Component {
 		}
 	}
 
-	passIdToSingleCrag(e) {
-		console.log(e);
-	}
-
 	render() {
 		return (
 			<div>
@@ -35,12 +31,14 @@ export default class CragCard extends Component {
 					</a>
 				</h2>
 
-				{!this.state.loaded && (
-					<img src={PicPlaceholder} alt='crack climber' width='150' />
+				{!this.props.cragInfo.photo && (
+					<img src={PicPlaceholder} alt='crack climber' width='300' />
 				)}
-				{this.state.loaded && (
+				{this.props.cragInfo.photo && (
 					<img
-						src={`uploads/${this.props.cragInfo.photo}`}
+						// src={`../assets/images/${this.props.cragInfo.photo}`}
+						src={`/images/${this.props.cragInfo.photo}`}
+						width={300}
 						alt='cragImage'
 					/>
 				)}
@@ -54,10 +52,7 @@ export default class CragCard extends Component {
 				<h3>{this.props.cragInfo.difficulty}</h3>
 				<div>
 					<a href={`/crags/${this.props.cragInfo._id}/edit`}>
-						<FaPencilAlt
-							onClick={this.passIdToSingleCrag}
-							style={{ color: 'black' }}
-						/>
+						<FaPencilAlt style={{ color: 'black' }} />
 					</a>
 				</div>
 			</div>

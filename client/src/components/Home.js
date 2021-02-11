@@ -13,13 +13,30 @@ export default class Home extends Component {
 	constructor() {
 		super();
 		this.state = {
+			loggedIn: false,
 			loaded: false,
 			crags: {},
+			user: {},
+			msg: '',
 		};
 	}
 
 	componentDidMount() {
 		this.fetchData();
+		this.checkMsg();
+		this.updateUserState();
+	}
+
+	updateUserState() {
+		this.setState({
+			user: this.props.user,
+		});
+	}
+
+	checkMsg() {
+		return this.props.location.state
+			? this.setState({ msg: this.props.location.state.msg })
+			: this.setState({ msg: '' });
 	}
 
 	async fetchData() {
@@ -38,7 +55,12 @@ export default class Home extends Component {
 	render() {
 		return (
 			<div>
-				<p>Home Component!!</p>
+				{this.state.msg && <h2>{this.state.msg}</h2>}
+				{localStorage.getItem('name') ? (
+					<h3>{`Currently Logged In as:  ${localStorage.getItem(
+						'name'
+					)}`}</h3>
+				) : null}
 				{!this.state.loaded && <p>Loading...</p>}
 				{this.state.loaded && (
 					<CragCardList className='crag-cards'>

@@ -15,31 +15,10 @@ const cragSchema = new mongoose.Schema({
 		type: String,
 		trim: true,
 	},
-	// location: {
-	//     type: {
-	//         type: String,
-	//         default : "Point"
-	//     },
-	//     coordinates: [{
-	//         type: Number,
-	//         required: 'You must supply coordinates!'
-	//     }],
-	//     address: {
-	//         type: String,
-	//         required: "You must supply an address!"
-	//     }
-	// },
 	difficulty: {
 		type: String,
 		required: 'Please let us know the overall grade for the crag',
 	},
-	// file: {
-	// 	type: Buffer,
-	// 	required: 'Please add a photo!',
-	// },
-	// imagePreviewUrl:{
-
-	// }
 	freeAllDay: {
 		type: Boolean,
 	},
@@ -65,15 +44,24 @@ const cragSchema = new mongoose.Schema({
 			},
 		],
 	},
+	photo: {
+		type: String,
+	},
 });
 
-cragSchema.pre('save', function (next) {
+cragSchema.pre('save', async function (next) {
 	if (!this.isModified('cragName')) {
 		next();
 		return;
 	} else {
 		this.slug = slug(this.cragName);
-		console.log(this.slug);
+		// find other stores that have the slug of this.name-1 , this.name-2 etc...
+		// This function is duplicated in the 'updateCrag' middleware too...TODO - tidy up...
+		const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');
+		const cragsWithSlug = await this.constructor.find({ slug: slugRegEx });
+		if (cragsWithSlug.length) {
+			this.slug = `${this.slug}-${cragsWithSlug.length + 1}`;
+		}
 		next();
 	}
 });

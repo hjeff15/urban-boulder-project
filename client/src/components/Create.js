@@ -12,6 +12,9 @@ export default class Create extends Component {
 			location: {
 				coordinates: [],
 			},
+			photo: null,
+			photoPreviewURL: {},
+			photoLoaded: false,
 			freeAllDay: false,
 			busyWeekend: false,
 			avoidRush: false,
@@ -29,6 +32,7 @@ export default class Create extends Component {
 					coordinates: this.props.cragCardInfo.data.location
 						.coordinates,
 				},
+				photo: this.props.cragCardInfo.data.photo,
 				freeAllDay: this.props.cragCardInfo.data.freeAllDay,
 				busyWeekend: this.props.cragCardInfo.data.busyWeekend,
 				avoidRush: this.props.cragCardInfo.data.avoidRush,
@@ -57,19 +61,27 @@ export default class Create extends Component {
 	};
 
 	onChangeLocation = (e) => {
-		if (e.target.id === 'lng') {
+		if (e.target.id === 'lat') {
 			let location = { ...this.state.location };
-			let lng = e.target.value;
-			location.coordinates[0] = lng;
+			let lat = parseFloat(e.target.value);
+			location.coordinates[1] = lat;
 			this.setState({ location });
-			console.log(this.state.location.coordinates);
 		} else {
 			let location = { ...this.state.location };
-			let lng = e.target.value;
-			location.coordinates[1] = lng;
+			let lng = parseFloat(e.target.value);
+			location.coordinates[0] = lng;
 			this.setState({ location });
-			console.log(this.state.location.coordinates);
 		}
+	};
+
+	onChangePhoto = (e) => {
+		// const photoFile = new FormData();
+		// photoFile.append('photo', e.target.files[0]);
+		this.setState({
+			photo: e.target.files[0],
+			photoPreviewURL: URL.createObjectURL(e.target.files[0]),
+			photoLoaded: true,
+		});
 	};
 
 	toggle = (e) => {
@@ -94,34 +106,29 @@ export default class Create extends Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 
-		console.log(`Form submitted:`);
-		console.log(`Crag Name: ${this.state.cragName}`);
-		console.log(`Crag Description: ${this.state.cragDescription}`);
-		console.log(`Difficulty: ${this.state.difficulty}`);
-		console.log(`Location: ${this.state.location.coordinates}`);
-		console.log(`Free all day? ${this.state.freeAllDay}`);
-
-		const newCrag = {
-			cragName: this.state.cragName,
-			cragDescription: this.state.cragDescription,
-			difficulty: this.state.difficulty,
-			location: {
-				coordinates: this.state.location.coordinates,
-			},
-			freeAllDay: this.state.freeAllDay,
-			busyWeekend: this.state.busyWeekend,
-			avoidRush: this.state.avoidRush,
-		};
+		const photoData = new FormData();
+		photoData.append('photo', this.state.photo);
+		photoData.append('cragName', this.state.cragName);
+		photoData.append('cragDescription', this.state.cragDescription);
+		photoData.append('difficulty', this.state.difficulty);
+		photoData.append(
+			'location[coordinates]',
+			this.state.location.coordinates
+		);
+		photoData.append('freeAllDay', this.state.freeAllDay);
+		photoData.append('busyWeekend', this.state.busyWeekend);
+		photoData.append('avoidRush', this.state.avoidRush);
 
 		if (this.props.postData) {
+			photoData.append('_id', this.props.cragCardInfo.data._id);
 			const id = this.props.cragCardInfo.data._id;
-			this.props.postData(newCrag, id);
+			this.props.postData(photoData, id);
 		} else {
 			axios
-				.post('http://localhost:4000/createCrag', newCrag)
+				.post('http://localhost:4000/createCrag', photoData)
 				.then((res) => {
-					console.log('Slug = ' + res.data.slug);
-					this.props.history.push(`/crag/${res.data.slug}`);
+					console.log(res);
+					// this.props.history.push(`/crag/${res.data.slug}`);
 					return res.data;
 				})
 				.catch((err) => {
@@ -138,6 +145,9 @@ export default class Create extends Component {
 				location: {
 					coordinates: [],
 				},
+				photo: null,
+				photoPreviewURL: {},
+				photoLoaded: false,
 				freeAllDay: false,
 				busyWeekend: false,
 				avoidRush: false,
@@ -150,11 +160,15 @@ export default class Create extends Component {
 			<div>
 				{this.state.formError && <FormError />}
 				<h3>Create a new Crage here!!</h3>
-				<form onSubmit={this.onSubmit}>
+				<form
+					formEncType='multipart/form-data'
+					onSubmit={this.onSubmit}
+				>
 					<div className='form-group'>
 						<label>Crag Name: </label>
 						<input
 							type='text'
+							name='cragName'
 							className='form-control'
 							required
 							defaultValue={this.state.cragName}
@@ -165,6 +179,7 @@ export default class Create extends Component {
 						<label>Crag Description: </label>
 						<textarea
 							type='text'
+							name='cragDescription'
 							required
 							className='form-control'
 							defaultValue={this.state.cragDescription}
@@ -174,37 +189,54 @@ export default class Create extends Component {
 					<div className='form-group'>
 						<label htmlFor='location'>Location: </label>
 						<div>
-							<label htmlFor='lng'>Lng: </label>
-							<input
-								type='number'
-								required
-								id='lng'
-								defaultValue={
-									this.state.location
-										? this.state.location.coordinates[0]
-										: []
-								}
-								onChange={this.onChangeLocation}
-							/>
-							<label htmlFor='lng'>Lat: </label>
+							<label htmlFor='lat'>Latitude: </label>
 							<input
 								type='number'
 								required
 								id='lat'
+								name='lat'
 								defaultValue={
-									this.state.location
+									this.state.location.coordinates[1]
 										? this.state.location.coordinates[1]
 										: []
 								}
 								onChange={this.onChangeLocation}
 							/>
+							<label htmlFor='lng'>Longitude: </label>
+							<input
+								type='number'
+								required
+								id='lng'
+								name='lng'
+								defaultValue={
+									this.state.location.coordinates[0]
+										? this.state.location.coordinates[0]
+										: []
+								}
+								onChange={this.onChangeLocation}
+							/>
 						</div>
-					</div>
-					<div>
-						<label htmlFor='grade'>Difficulty: </label>
+						<div className='form-group files'>
+							<label htmlFor='photo'>Upload Your File </label>
+							<input
+								type='file'
+								name='photo'
+								className='form-control'
+								accept='image/gif, image/png, image/jpeg'
+								onChange={this.onChangePhoto}
+							/>
+							{this.state.photoLoaded && (
+								<img
+									src={this.state.photoPreviewURL}
+									alt='crag'
+									width={200}
+								/>
+							)}
+						</div>
+						<label htmlFor='difficulty'>Difficulty: </label>
 						<select
-							name='grade'
-							id='grade'
+							id='difficulty'
+							name='difficulty'
 							required
 							value={this.state.difficulty}
 							onChange={this.onChangeDifficulty}
