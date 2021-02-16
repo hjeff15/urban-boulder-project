@@ -118,6 +118,7 @@ export default class Create extends Component {
 		photoData.append('freeAllDay', this.state.freeAllDay);
 		photoData.append('busyWeekend', this.state.busyWeekend);
 		photoData.append('avoidRush', this.state.avoidRush);
+		photoData.append('author', this.props.user._id);
 
 		if (this.props.postData) {
 			photoData.append('_id', this.props.cragCardInfo.data._id);
@@ -128,7 +129,9 @@ export default class Create extends Component {
 				.post('http://localhost:4000/createCrag', photoData)
 				.then((res) => {
 					console.log(res);
-					// this.props.history.push(`/crag/${res.data.slug}`);
+					this.props.history.push(`/crag/${res.data.slug}`, {
+						msg: 'Crag successfully created!',
+					});
 					return res.data;
 				})
 				.catch((err) => {

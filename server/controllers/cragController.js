@@ -47,7 +47,7 @@ exports.resize = async (req, res, next) => {
 };
 
 exports.createCrag = async (req, res) => {
-	console.log(req.body);
+	// console.log(req.body);
 	// req.body must be stringified in order to recieve image file
 	const obj = JSON.parse(JSON.stringify(req.body));
 	// function to Parse the location coordinates BACK into integers
@@ -62,7 +62,6 @@ exports.createCrag = async (req, res) => {
 	};
 	const crag = new Crag(cleanData(obj));
 	await crag.save();
-	console.log(crag);
 	res.send(crag);
 };
 
@@ -128,4 +127,28 @@ exports.getCragBySlug = async (req, res) => {
 	const crag = await Crag.findOne({ slug: req.params.slug });
 	if (!crag) return next();
 	res.send(crag);
+};
+
+exports.searchCrags = async (req, res) => {
+	console.log(req.query.q);
+	const crags = await Crag
+		// Find crags first
+		.find(
+			{
+				$text: {
+					$search: req.query.q,
+				},
+			},
+			{
+				score: { $meta: 'textScore' },
+			}
+		)
+		// Then sort the crags
+		.sort({
+			score: { $meta: 'textScore' },
+		})
+		// limit the number of crags returned
+		.limit(5);
+	console.log(crags);
+	res.send(crags);
 };

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import { Router } from 'react-router';
 import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 // import axios from 'axios';
 
@@ -9,11 +10,12 @@ import Crags from './components/Crags';
 import Create from './components/Create';
 import Login from './components/Login';
 import Register from './components/Register';
-import Blog from './components/Blog';
+import Map from './components/Map';
 import EditCrag from './components/EditCrag';
 import ShowCrag from './components/ShowCrag';
 import WrongURL from './components/WrongURL';
 import Dashboard from './components/Dashboard';
+import Reset from './components/Reset';
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	return (
@@ -123,9 +125,10 @@ class App extends Component {
 						<Register {...props} updateUser={this.updateUser} />
 					)}
 				/>
-				<Route path='/blog' component={Blog} />
+				<Route path='/map' component={Map} />
 				<Route path='/crags/:id/edit' component={EditCrag} />
 				<Route path='/crag/:slug' component={ShowCrag} />
+				<Route path='/account/reset/:token' component={Reset} />
 				<Route path='/404' component={WrongURL} />
 			</Router>
 		);

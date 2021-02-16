@@ -55,14 +55,14 @@ export default class Dashboard extends Component {
 		});
 	};
 
-	submitUserUpdate = (e) => {
+	submitUserUpdate = async (e) => {
 		e.preventDefault();
 		const userId = localStorage.getItem('_id');
 		const updateInfo = {
 			name: this.state.name,
 			email: this.state.email,
 		};
-		axios
+		const response = await axios
 			.post(`http://localhost:4000/account/${userId}`, updateInfo)
 			.then((res) => {
 				console.log(res);
@@ -78,6 +78,8 @@ export default class Dashboard extends Component {
 					formError: true,
 				});
 			});
+		this.checkMsg();
+		return response;
 	};
 
 	render() {
@@ -106,7 +108,7 @@ export default class Dashboard extends Component {
 								onChange={this.onChangeEmail}
 							/>
 						</label>
-						<input type='submit' value='Update &raquo' />
+						<input type='submit' value='Update &raquo;' />
 					</form>
 				</div>
 			</div>

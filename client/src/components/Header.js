@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import SearchBox from './Searchbox';
 
 const PageHeader = styled.header`
 	font-family: 'Stardos Stencil', cursive;
@@ -43,17 +44,6 @@ const LoginNav = styled.a`
 	padding: 10px;
 	padding-top: 2.2rem;
 `;
-const SearchBox = styled.input`
-	font-family: 'Stardos Stencil', cursive;
-	display: flex;
-	width: 99vw;
-	color: black;
-	font-size: 1.3rem;
-	background-color: white;
-	height: 2rem;
-	border-color: white;
-	border-radius: 10px;
-`;
 
 const Gravatar = styled.img`
 	margin-top: 0.8rem;
@@ -62,19 +52,13 @@ const Gravatar = styled.img`
 	padding: 10px;
 `;
 
-export default class Header extends Component {
+class Header extends Component {
 	constructor() {
 		super();
 		this.state = {
 			search: '',
 		};
 	}
-
-	changeSearch = (e) => {
-		this.setState({
-			search: e.target.value,
-		});
-	};
 
 	render() {
 		return (
@@ -90,7 +74,7 @@ export default class Header extends Component {
 					</div>
 					<Navigators href='/about'>About</Navigators>
 					<Navigators href='/crags'>View Crags</Navigators>
-					<Navigators href='/blog'>Blogs</Navigators>
+					<Navigators href='/map'>Map</Navigators>
 					<Navigators href='/create'>Create</Navigators>
 					<div>
 						{localStorage.getItem('emailHash') ? (
@@ -110,13 +94,10 @@ export default class Header extends Component {
 					</div>
 					<LoginNav href='/register'>Register</LoginNav>
 				</PageHeader>
-				<SearchBox
-					type='text'
-					placeholder='Search...'
-					value={this.state.search}
-					onChange={this.changeSearch}
-				/>
+				<SearchBox />
 			</div>
 		);
 	}
 }
+
+export default Header;

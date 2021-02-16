@@ -43,4 +43,17 @@ router.get('/logout', authController.logout);
 router.get('/account/:id', userController.account);
 router.post('/account/:id', userController.updateAccount);
 
+router.post('/forgot', catchErrors(authController.forgot));
+router.get('/account/reset/:token', catchErrors(authController.reset));
+router.post(
+	'/account/reset/:token',
+	authController.confirmedPasswords,
+	authController.updatePassword
+);
+
+/* 
+	API
+*/
+router.get('/api/search', catchErrors(cragController.searchCrags));
+
 module.exports = router;

@@ -63,10 +63,11 @@ export default class Register extends Component {
 				localStorage.setItem('name', res.data.name);
 				localStorage.setItem('_id', res.data._id);
 				localStorage.setItem('emailHash', res.data.emailHash);
+				localStorage.setItem('loggedIn', true);
 				this.props.history.push({
 					pathname: '/',
 					state: {
-						logInMsg: `Welcome to your new account ${res.data.name}!`,
+						msg: `Welcome to your new account ${res.data.name}!`,
 					},
 				});
 			}) // re-direct to login on successful register

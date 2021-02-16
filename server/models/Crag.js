@@ -47,6 +47,17 @@ const cragSchema = new mongoose.Schema({
 	photo: {
 		type: String,
 	},
+	author: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'User',
+		required: 'You must supply an author',
+	},
+});
+
+//Define our indexes
+cragSchema.index({
+	cragName: 'text',
+	cragDescription: 'text',
 });
 
 cragSchema.pre('save', async function (next) {

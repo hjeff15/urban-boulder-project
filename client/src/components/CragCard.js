@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PicPlaceholder from '../assets/images/crack.jpeg';
-import { FaPencilAlt } from 'react-icons/fa';
 
 export default class CragCard extends Component {
 	constructor() {
@@ -50,11 +49,6 @@ export default class CragCard extends Component {
 					...
 				</h4>
 				<h3>{this.props.cragInfo.difficulty}</h3>
-				<div>
-					<a href={`/crags/${this.props.cragInfo._id}/edit`}>
-						<FaPencilAlt style={{ color: 'black' }} />
-					</a>
-				</div>
 			</div>
 		);
 	}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-export default class Blog extends Component {
+export default class Map extends Component {
 	render() {
 		return (
 			<div>
-				<p>Welcome to Blog Component!!</p>
+				<p>Welcome to Map Component!!</p>
 			</div>
 		);
 	}

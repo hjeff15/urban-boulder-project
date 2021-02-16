@@ -9,6 +9,7 @@ export default class EditCrag extends Component {
 		this.state = {
 			crag: '',
 			loaded: false,
+			msg: '',
 		};
 		this.postData = this.postData.bind(this);
 	}
@@ -21,7 +22,14 @@ export default class EditCrag extends Component {
 		const response = await axios
 			.get(`http://localhost:4000/crags/${id}/edit`)
 			.then((result) => {
-				this.setState({ crag: result, loaded: true });
+				console.log(result);
+				if (result.data.author !== localStorage._id) {
+					this.setState({
+						msg: `I'm afraid you must be the author of ${result.data.cragName} in order to edit it`,
+					});
+				} else {
+					this.setState({ crag: result, loaded: true });
+				}
 			})
 			.catch(function (error) {
 				// handle error
@@ -35,7 +43,9 @@ export default class EditCrag extends Component {
 			.post(`http://localhost:4000/crags/${id}/edit`, crag)
 			.then((res) => {
 				console.log(res);
-				this.props.history.push(`/crag/${res.data.slug}`);
+				this.props.history.push(`/crag/${res.data.slug}`, {
+					msg: 'Crag successfully updated!',
+				});
 			})
 			.catch((err) => {
 				console.log(err);
@@ -47,11 +57,13 @@ export default class EditCrag extends Component {
 		return (
 			<div>
 				<h1>Edit Form</h1>
+				{this.state.msg && <h2>{this.state.msg}</h2>}
 				{this.state.loaded && <h2>{this.state.crag.data.cragName}</h2>}
 				{this.state.loaded && (
 					<Create
 						cragCardInfo={this.state.crag}
 						postData={this.postData}
+						user={localStorage}
 					/>
 				)}
 			</div>
