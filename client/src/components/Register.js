@@ -81,10 +81,14 @@ export default class Register extends Component {
 			console.log(res);
 			localStorage.clear();
 			this.props.updateUser();
-			this.props.history.push({
-				pathname: '/',
-				state: { logoutMsg: 'See you later!!!' },
-			});
+			this.props.history.push(
+				{
+					pathname: '/',
+					state: { logoutMsg: 'See you later!!!' },
+				}.catch((err) => {
+					console.log(err);
+				})
+			);
 		});
 	};
 

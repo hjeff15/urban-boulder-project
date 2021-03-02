@@ -10,12 +10,13 @@ import Crags from './components/Crags';
 import Create from './components/Create';
 import Login from './components/Login';
 import Register from './components/Register';
-import Map from './components/Map';
 import EditCrag from './components/EditCrag';
 import ShowCrag from './components/ShowCrag';
 import WrongURL from './components/WrongURL';
 import Dashboard from './components/Dashboard';
 import Reset from './components/Reset';
+import Map from './components/Map';
+// import { set } from 'mongoose';
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	return (
@@ -49,6 +50,7 @@ class App extends Component {
 				name: '',
 				_id: '',
 				emailHash: '',
+				likes: [],
 			},
 			loggedIn: false,
 		};
@@ -59,12 +61,14 @@ class App extends Component {
 			localStorage.getItem('name') &&
 			localStorage.getItem('_id') &&
 			localStorage.getItem('emailHash') &&
+			localStorage.getItem('likes') &&
 			localStorage.getItem('loggedIn')
 		) {
 			const user = { ...this.state.user };
 			user.name = localStorage.getItem('name');
 			user._id = localStorage.getItem('_id');
 			user.emailHash = localStorage.getItem('emailHash');
+			user.likes = localStorage.getItem('likes');
 			this.setState({
 				user,
 				loggedIn: true,
@@ -72,12 +76,21 @@ class App extends Component {
 		}
 	}
 
-	updateUser = (name, _id, emailHash) => {
+	updateLikes = (likes) => {
+		let stateCopy = { ...this.state.user };
+		stateCopy.likes = likes;
+		this.setState({
+			user: stateCopy,
+		});
+	};
+
+	updateUser = (name, _id, emailHash, likes) => {
 		if (name) {
 			const userData = { ...this.state.user };
 			userData.name = name;
 			userData._id = _id;
 			userData.emailHash = emailHash;
+			userData.likes = likes;
 			this.setState({
 				user: userData,
 				loggedIn: true,
@@ -87,6 +100,7 @@ class App extends Component {
 			userData.name = '';
 			userData._id = '';
 			userData.emailHash = '';
+			userData.likes = [];
 			this.setState({
 				user: userData,
 				loggedIn: false,
@@ -99,11 +113,17 @@ class App extends Component {
 
 		return (
 			<Router>
-				<Header user={user} />
+				<Header user={user} updateUser={this.updateUser} />
 				<Route
 					path='/'
 					exact
-					render={(props) => <Home {...props} user={user} />}
+					render={(props) => (
+						<Home
+							{...props}
+							user={user}
+							updateLikes={this.updateLikes}
+						/>
+					)}
 				/>
 				<Route path='/about' component={About} />
 				<Route path='/crags' component={Crags} />
@@ -127,7 +147,11 @@ class App extends Component {
 				/>
 				<Route path='/map' component={Map} />
 				<Route path='/crags/:id/edit' component={EditCrag} />
-				<Route path='/crag/:slug' component={ShowCrag} />
+				<Route
+					path='/crag/:slug'
+					exact
+					render={(props) => <ShowCrag {...props} user={user} />}
+				/>
 				<Route path='/account/reset/:token' component={Reset} />
 				<Route path='/404' component={WrongURL} />
 			</Router>

@@ -31,9 +31,9 @@ exports.logout = (req, res) => {
 	console.log('Logged out..');
 };
 
-exports.isAuth = (req, res, next) => {
-	if (req.isAuthenticated()) {
-		// res.send(req.user);
+exports.isAuth = async (req, res, next) => {
+	const user = await User.findById(req.body.user);
+	if (user) {
 		next();
 		return;
 	} else {

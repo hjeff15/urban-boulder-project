@@ -23,6 +23,7 @@ const userSchema = new Schema({
 	emailHash: String,
 	resetPasswordToken: String,
 	resetPasswordExpires: Date,
+	likes: [{ type: mongoose.Schema.ObjectId, ref: 'Crag' }],
 });
 
 userSchema.pre('save', async function (next) {

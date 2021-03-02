@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+
+const MapImage = styled.div`
+	grid-area: map;
+`;
 
 export default class StaticMap extends Component {
 	constructor() {
@@ -20,12 +25,12 @@ export default class StaticMap extends Component {
 
 	render() {
 		return (
-			<div>
+			<MapImage>
 				<img
 					src={`https://maps.googleapis.com/maps/api/staticmap?center=${this.state.lng},${this.state.lat}&zoom=${this.state.zoom}&size=${this.state.size}&key=${process.env.REACT_APP_MAP_KEY}&markers=${this.state.lng},${this.state.lat}&scale=${this.state.scale}`}
 					alt='location'
 				/>
-			</div>
+			</MapImage>
 		);
 	}
 }

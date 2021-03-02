@@ -3,10 +3,35 @@ import axios from 'axios';
 import styled from 'styled-components';
 import CragCard from './CragCard';
 
+const HomeDiv = styled.div`
+	background-color: #08304b;
+`;
+
 const CragCardList = styled.ul`
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: auto;
+	grid-gap: 10px;
+	margin: 15px;
+	margin-top: 0px;
+	padding: 10px;
+`;
+
+const ListItem = styled.li`
+	list-style: none;
+	border: 1px solid #d9b92e;
+	border-radius: 10px;
+`;
+
+const Msg = styled.h2`
+	color: white;
+	margin-top: 0px;
+`;
+
+const LoginMsg = styled.h3`
+	color: white;
+	margin-top: 0px;
 `;
 
 export default class Home extends Component {
@@ -27,9 +52,16 @@ export default class Home extends Component {
 		this.updateUserState();
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.location.state !== this.props.location.state) {
+			this.checkMsg();
+		}
+	}
+
 	updateUserState() {
 		this.setState({
 			user: this.props.user,
+			loggedIn: true,
 		});
 	}
 
@@ -52,32 +84,46 @@ export default class Home extends Component {
 		return response;
 	}
 
+	addMsg = (msg) => {
+		this.setState({
+			msg: msg,
+		});
+	};
+
 	render() {
 		return (
-			<div>
-				{this.state.msg && <h2>{this.state.msg}</h2>}
+			<HomeDiv>
+				{this.state.msg && <Msg>{this.state.msg}</Msg>}
 				{localStorage.getItem('name') ? (
-					<h3>{`Currently Logged In as:  ${localStorage.getItem(
+					<LoginMsg>{`Currently Logged In as:  ${localStorage.getItem(
 						'name'
-					)}`}</h3>
+					)}`}</LoginMsg>
 				) : null}
 				{!this.state.loaded && <p>Loading...</p>}
 				{this.state.loaded && (
 					<CragCardList className='crag-cards'>
 						{Object.keys(this.state.crags.data).map(
 							(key, index) => (
-								<CragCard
-									key={index}
-									cragInfo={this.state.crags.data[key]}
-								>
-									Crag Name:{' '}
-									{this.state.crags.data[key].cragName}
-								</CragCard>
+								<ListItem key={index}>
+									<CragCard
+										cragInfo={this.state.crags.data[key]}
+										user={
+											this.props.user
+												? this.props.user
+												: null
+										}
+										addMsg={this.addMsg}
+										updateLikes={this.props.updateLikes}
+									>
+										Crag Name:{' '}
+										{this.state.crags.data[key].cragName}
+									</CragCard>
+								</ListItem>
 							)
 						)}
 					</CragCardList>
 				)}
-			</div>
+			</HomeDiv>
 		);
 	}
 }

@@ -4,15 +4,21 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
-const SearchInput = styled.input`
-	font-family: 'Stardos Stencil', cursive;
+const SearchBoxPage = styled.div`
+	background-color: #08304b;
 	display: flex;
-	width: 99vw;
+	justify-content: center;
+	padding-top: 0.4rem;
+`;
+
+const SearchInput = styled.input`
+	font-family: 'Roboto', sans-serif;
+	width: 80vw;
 	color: black;
 	font-size: 1.3rem;
 	background-color: white;
 	height: 2rem;
-	border-color: gray;
+	border-color: transparent;
 	border-radius: 10px;
 `;
 
@@ -96,7 +102,7 @@ class SearchBox extends Component {
 
 	render() {
 		return (
-			<div>
+			<SearchBoxPage>
 				<SearchInput
 					type='text'
 					placeholder='Search...'
@@ -116,7 +122,7 @@ class SearchBox extends Component {
 						<strong>{crag.cragName}</strong>
 					</SearchResult>
 				))}
-			</div>
+			</SearchBoxPage>
 		);
 	}
 }

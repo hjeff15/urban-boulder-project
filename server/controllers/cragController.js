@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const Crag = require('../models/Crag');
+const User = require('../models/User');
 const multer = require('multer');
 const jimp = require('jimp');
 const uuid = require('uuid');
 const slug = require('slugs');
+const { findById } = require('../models/User');
 
 const multerOptions = {
 	storage: multer.memoryStorage(),
@@ -124,7 +126,9 @@ exports.updateCrag = async (req, res) => {
 };
 
 exports.getCragBySlug = async (req, res) => {
-	const crag = await Crag.findOne({ slug: req.params.slug });
+	const crag = await Crag.findOne({ slug: req.params.slug }).populate(
+		'comments'
+	);
 	if (!crag) return next();
 	res.send(crag);
 };
@@ -151,4 +155,51 @@ exports.searchCrags = async (req, res) => {
 		.limit(5);
 	console.log(crags);
 	res.send(crags);
+};
+
+exports.mapCrags = async (req, res) => {
+	const coordinates = [req.query.lng, req.query.lat].map(parseFloat);
+
+	const q = {
+		location: {
+			$near: {
+				$geometry: {
+					type: 'Point',
+					coordinates: coordinates,
+				},
+				$maxDistance: req.query.radius, //km
+			},
+		},
+	};
+
+	const crags = await Crag.find(q).select(
+		'cragName location difficulty photo slug'
+	);
+	res.send(crags);
+};
+
+exports.likeCrag = async (req, res) => {
+	const user = await User.findById(req.body.userId);
+	const crag = await Crag.findById(req.params.id);
+
+	const cragLikes = crag.likes.map((obj) => obj.toString());
+	const cragOperator = cragLikes.includes(req.body.userId)
+		? '$pull'
+		: '$addToSet';
+	const cragToUpdate = await Crag.findByIdAndUpdate(
+		req.params.id,
+		{ [cragOperator]: { likes: req.body.userId } },
+		{ new: true }
+	);
+	console.log(cragToUpdate);
+
+	// Add/Remove liked crags from user profile
+	const likes = user.likes.map((obj) => obj.toString());
+	const operator = likes.includes(req.params.id) ? '$pull' : '$addToSet';
+	const userToUpdate = await User.findByIdAndUpdate(
+		req.body.userId,
+		{ [operator]: { likes: req.params.id } },
+		{ new: true }
+	);
+	res.send(userToUpdate);
 };

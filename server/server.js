@@ -2,6 +2,7 @@ require('dotenv').config({ path: './variables.env' });
 // Import all our models here
 require('./models/Crag');
 require('./models/User');
+require('./models/Comment');
 
 const express = require('express');
 const app = express();

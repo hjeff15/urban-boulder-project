@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import ForgotForm from '../ForgotForm';
+import ForgotForm from './ForgotForm';
 
 export default class Login extends Component {
 	constructor() {
@@ -34,15 +34,25 @@ export default class Login extends Component {
 			.post('http://localhost:4000/login', loginDetails)
 			.then((res) => {
 				console.log(res.data);
+				if (res.data === 'Not Logged In...') {
+					this.props.history.push('/', {
+						msg:
+							'Sorry, either the username or password was not correct.',
+					});
+					localStorage.clear();
+					return;
+				}
 				localStorage.clear();
 				localStorage.setItem('name', res.data.name);
 				localStorage.setItem('_id', res.data._id);
 				localStorage.setItem('emailHash', res.data.emailHash);
+				localStorage.setItem('likes', JSON.stringify(res.data.likes));
 				localStorage.setItem('loggedIn', true);
 				this.props.updateUser(
 					res.data.name,
 					res.data._id,
-					res.data.emailHash
+					res.data.emailHash,
+					res.data.likes
 				);
 				this.props.history.push('/', {
 					user: res.data,

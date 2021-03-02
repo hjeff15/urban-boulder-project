@@ -3,6 +3,7 @@ const router = express.Router();
 const cragController = require('../controllers/cragController');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const commentController = require('../controllers/commentController');
 const { catchErrors } = require('../handlers/errorHandlers');
 
 // Do work here
@@ -51,9 +52,17 @@ router.post(
 	authController.updatePassword
 );
 
+router.post(
+	'/comments/:id',
+	authController.isAuth,
+	commentController.addComment
+);
+
 /* 
 	API
 */
 router.get('/api/search', catchErrors(cragController.searchCrags));
+router.get('/api/crags/near', catchErrors(cragController.mapCrags));
+router.post('/api/crags/:id/like', catchErrors(cragController.likeCrag));
 
 module.exports = router;
