@@ -1,5 +1,185 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import styled from 'styled-components';
+
+// const Container = styled.div`
+// 	display: grid;
+// `;
+
+const ContainerForm = styled.form`
+	display: grid;
+	grid-template-columns: 15% repeat(3, 1fr) 15%;
+	grid-template-rows: repeat(5, 4rem);
+	grid-template-areas:
+		'. title title title .'
+		'. name-label name-input name-input .'
+		'. email-label email-input email-input .'
+		'. password-label password-input password-input .'
+		'. confirm-password-label confirm-password-input confirm-password-input .'
+		'. . register-button register-button .';
+	justify-items: center;
+	@media (max-width: 830px) {
+		grid-template-columns: 10% repeat(3, 1fr) auto;
+	}
+	@media (max-width: 680px) {
+		grid-template-columns: 20vw auto 20vw;
+		grid-template-rows: repeat(10, auto);
+		grid-template-areas:
+			'.title .'
+			'.name-label .'
+			'.name-input .'
+			'.email-label .'
+			'.email-input .'
+			'.password-label .'
+			'.password-input .'
+			'.confirm-password-label .'
+			'.confirm-password-input .'
+			'.register-button .';
+	}
+	@media (max-width: 450px) {
+		grid-template-columns: minmax(255px, auto);
+		grid-template-areas:
+			'title '
+			'name-label '
+			'name-input '
+			'email-label '
+			'email-input '
+			'password-label '
+			'password-input '
+			'confirm-password-label '
+			'confirm-password-input '
+			'register-button ';
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+`;
+
+const Title = styled.h2`
+	grid-area: title;
+	font-size: 1.7rem;
+	margin: 0px;
+	@media (max-width: 680px) {
+		margin: 15px;
+	}
+	@media (max-width: 500px) {
+		font-size: 1.3rem;
+	}
+`;
+
+const NameLabel = styled.label`
+	grid-area: name-label;
+	font-size: 1.5rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 2px;
+	}
+	@media (max-width: 500px) {
+		font-size: 1.2rem;
+	}
+`;
+
+const NameInput = styled.input`
+	grid-area: name-input;
+	width: 22rem;
+	height: 1.4rem;
+	font-size: 1rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 10px;
+		width: auto;
+		justify-self: stretch;
+	}
+`;
+const EmailLabel = styled.label`
+	grid-area: email-label;
+	font-size: 1.5rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 2px;
+	}
+	@media (max-width: 500px) {
+		font-size: 1.2rem;
+	}
+`;
+
+const EmailInput = styled.input`
+	grid-area: email-input;
+	width: 22rem;
+	height: 1.4rem;
+	font-size: 1rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 10px;
+		width: auto;
+		justify-self: stretch;
+	}
+`;
+const PasswordLabel = styled.label`
+	grid-area: password-label;
+	font-size: 1.5rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 5px;
+	}
+	@media (max-width: 500px) {
+		font-size: 1.2rem;
+	}
+`;
+
+const PasswordInput = styled.input`
+	grid-area: password-input;
+	width: 22rem;
+	height: 1.4rem;
+	font-size: 1.4rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 10px;
+		width: auto;
+		justify-self: stretch;
+	}
+`;
+
+const ConfirmLabel = styled.label`
+	grid-area: confirm-password-label;
+	font-size: 1.5rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 5px;
+	}
+	@media (max-width: 500px) {
+		font-size: 1.2rem;
+	}
+`;
+
+const ConfirmInput = styled.input`
+	grid-area: confirm-password-input;
+	width: 22rem;
+	height: 1.4rem;
+	font-size: 1rem;
+	justify-self: start;
+	@media (max-width: 680px) {
+		margin-bottom: 10px;
+		width: auto;
+		justify-self: stretch;
+	}
+`;
+
+const Submit = styled.input`
+	grid-area: register-button;
+	background-color: #d9b92e;
+	color: white;
+	border-radius: 10px;
+	border: none;
+	justify-self: start;
+	width: 16rem;
+	height: 2rem;
+	/* margin-left: 6.5rem; */
+	font-size: 1.2rem;
+	cursor: pointer;
+	@media (max-width: 680px) {
+		justify-self: center;
+	}
+`;
 
 export default class Register extends Component {
 	constructor(props) {
@@ -28,13 +208,6 @@ export default class Register extends Component {
 			email: e.target.value,
 		});
 	};
-	// onChangePhoto = (e) => {
-	// 	this.setState({
-	// 		photo: e.target.files[0],
-	// 		photoPreviewURL: URL.createObjectURL(e.target.files[0]),
-	// 		photoLoaded: true,
-	// 	});
-	// };
 	onChangePassword = (e) => {
 		this.setState({
 			password: e.target.value,
@@ -102,65 +275,51 @@ export default class Register extends Component {
 							</p>
 					  ))
 					: null}
-				<form onSubmit={this.onSubmit}>
-					<h1>REGISTER PAGE</h1>
-					<label htmlFor='name'>
-						Name:
-						<input
-							type='text'
-							name='name'
-							required
-							defaultValue={this.state.name}
-							onChange={this.onChangeName}
-						/>
-					</label>
-					<label htmlFor='email'>
-						Email:
-						<input
-							type='email'
-							name='email'
-							required
-							defaultValue={this.state.email}
-							onChange={this.onChangeEmail}
-						/>
-					</label>
-					{/* <label htmlFor='photo'>Image(optional) </label> */}
-					{/* <input
-						type='file'
-						name='photo'
-						accept='image/gif, image/png, image/jpeg'
-						onChange={this.onChangePhoto}
+				<ContainerForm onSubmit={this.onSubmit}>
+					<Title>Register your details:</Title>
+					<NameLabel htmlFor='name'>Name: </NameLabel>
+					<NameInput
+						type='text'
+						name='name'
+						required
+						placeholder='Username...'
+						defaultValue={this.state.name}
+						onChange={this.onChangeName}
 					/>
-					{this.state.photoLoaded && (
-						<img
-							src={this.state.photoPreviewURL}
-							alt='crag'
-							width={200}
-						/>
-					)} */}
-					<label htmlFor='password'>
-						Password:
-						<input
-							type='password'
-							name='password'
-							required
-							defaultValue={this.state.password}
-							onChange={this.onChangePassword}
-						/>
-					</label>
-					<label htmlFor='password-confirm'>
+
+					<EmailLabel htmlFor='email'>Email: </EmailLabel>
+					<EmailInput
+						type='email'
+						name='email'
+						placeholder='Email...'
+						required
+						defaultValue={this.state.email}
+						onChange={this.onChangeEmail}
+					/>
+
+					<PasswordLabel htmlFor='password'>Password:</PasswordLabel>
+					<PasswordInput
+						type='password'
+						name='password'
+						required
+						defaultValue={this.state.password}
+						onChange={this.onChangePassword}
+					/>
+
+					<ConfirmLabel htmlFor='password-confirm'>
 						Password confirm:
-						<input
-							type='password'
-							name='passwordConfirm'
-							required
-							defaultValue={this.state.passwordConfirm}
-							onChange={this.onChangePasswordConfirm}
-						/>
-					</label>
-					<input type='submit' value='Register ->' />
-				</form>
-				<button onClick={this.logout}>Logout</button>
+					</ConfirmLabel>
+					<ConfirmInput
+						type='password'
+						name='passwordConfirm'
+						required
+						defaultValue={this.state.passwordConfirm}
+						onChange={this.onChangePasswordConfirm}
+					/>
+
+					<Submit type='submit' value='Register' />
+				</ContainerForm>
+				{/* <button onClick={this.logout}>Logout</button> */}
 			</div>
 		);
 	}

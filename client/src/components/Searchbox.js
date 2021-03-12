@@ -7,8 +7,11 @@ import axios from 'axios';
 const SearchBoxPage = styled.div`
 	background-color: #08304b;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	padding-top: 0.4rem;
+	padding-bottom: 0.4rem;
+	align-items: center;
 `;
 
 const SearchInput = styled.input`
@@ -23,18 +26,17 @@ const SearchInput = styled.input`
 `;
 
 const SearchResult = styled.a`
-	/* background-color: rgba(125, 125, 124, 0.2); */
 	background-color: rgba(214, 214, 214, 0.2);
 	border-bottom: solid grey 1px;
 	display: flex;
-	width: 99vw;
-	opacity: 0.7;
+	width: 80vw;
+	font-size: 1.1rem;
 	color: grey;
 	&:hover {
 		color: black;
 	}
 	&.active {
-		color: black;
+		color: white;
 	}
 `;
 
@@ -105,7 +107,7 @@ class SearchBox extends Component {
 			<SearchBoxPage>
 				<SearchInput
 					type='text'
-					placeholder='Search...'
+					placeholder='Search for a crag...'
 					value={this.state.search}
 					onChange={this.changeSearch}
 					onKeyUp={this.handleKeyDown}

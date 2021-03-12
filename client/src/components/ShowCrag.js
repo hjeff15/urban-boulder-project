@@ -13,71 +13,188 @@ const ShowCragPage = styled.div`
 	color: white;
 	box-sizing: border-box;
 	display: grid;
-	grid-template-columns: repeat(5, 20%);
-	grid-template-rows: 6rem 19rem 19rem minmax(300px, auto) auto;
+	grid-template-columns: repeat(3, minmax(auto, 270px)) minmax(200px, 500px) 10vw;
+	grid-template-rows:
+		4rem 4rem max-content minmax(30px, auto)
+		auto;
 	grid-template-areas:
-		' title title edit likes diff'
+		' img img img title edit'
+		' img img img likes diff'
 		' img img img desc desc'
 		' map map map map map'
-		' . comments comments comments .'
+		' comments comments comments comments comments'
 		' . commentForm commentForm commentForm .';
+	@media (max-width: 900px) {
+		grid-template-columns:
+			10vw repeat(4, auto)
+			10vw;
+		grid-template-rows: repeat(3, auto) minmax(30px, auto) repeat(3, auto);
+		grid-template-areas:
+			' . title edit likes diff .'
+			' . img img img img .'
+			' . img img img img .'
+			' . map map map map .'
+			' . desc desc desc desc .'
+			' . comments comments comments comments .'
+			' . commentForm commentForm commentForm commentForm .';
+	}
+	@media (max-width: 512px) {
+		grid-template-columns: 5vw repeat(4, auto) 5vw;
+		grid-template-rows: repeat(4, auto) minmax(30px, auto) repeat(3, auto);
+		grid-template-areas:
+			' . title title title edit .'
+			' . diff diff likes likes .'
+			' . img img img img .'
+			' . img img img img .'
+			' . map map map map .'
+			' . desc desc desc desc .'
+			' . comments comments comments comments .'
+			' . commentForm commentForm commentForm commentForm .';
+	}
 `;
 
 const CragTitleATag = styled.a`
 	text-decoration: none;
 	color: #d9b92e;
 	grid-area: title;
+	justify-self: start;
+	margin-left: 5px;
+	@media (max-width: 900px) {
+		margin-left: 0px;
+	}
 `;
 
 const CragTitle = styled.h2`
-	font-size: 50px;
+	font-size: 2.5rem;
 	margin: 0px;
+	@media (max-width: 900px) {
+		margin-top: 0.5rem;
+		font-size: 2rem;
+	}
+	@media (max-width: 400px) {
+		/* margin-top: 0.5rem; */
+		font-size: 1.5rem;
+	}
 `;
 
 const EditButton = styled.a`
 	grid-area: edit;
+	border: 1px solid brown;
+	border-radius: 50px;
+	padding: 0.5em;
+	margin-right: 2rem;
+	justify-self: end;
+	align-self: start;
+	@media (max-width: 900px) {
+		/* margin-top: 1rem; */
+		align-self: center;
+		padding: 0.2em;
+		margin: 0px;
+		justify-self: start;
+	}
+	@media (max-width: 590px) {
+		margin: 0px;
+	}
+	@media (max-width: 512px) {
+		justify-self: end;
+	}
 `;
 
 const CragImage = styled.img`
 	grid-area: img;
-	object-fit: cover;
+	object-fit: contain;
 	width: 100%;
 	height: 100%;
+	border-radius: 5px;
+	@media (max-width: 900px) {
+		object-fit: fill;
+	}
+	@media (max-width: 700px) {
+		object-fit: contain;
+	}
 `;
 
-const CragDiff = styled.h3`
+const CragDiff = styled.p`
 	grid-area: diff;
 	color: #d9b92e;
-	justify-self: center;
-	font-size: 50px;
-	margin: 0px;
-	width: 80px;
-	height: 80px;
+	font-size: 3rem;
+	width: 90%;
 	text-align: center;
 	border: 1px solid #d9b92e;
+	justify-self: start;
+	align-self: center;
+	@media (max-width: 900px) {
+		font-size: 2rem;
+		justify-self: end;
+		margin: 0px;
+	}
+	@media (max-width: 512px) {
+		justify-self: start;
+	}
 `;
 
 const CragLikes = styled.div`
 	grid-area: likes;
 	display: grid;
-	grid-template-columns: repeat(2, 50%);
+	place-self: center stretch;
+	grid-template-columns: 30% 70%;
 	grid-template-areas: 'thumbs numbers';
+	/* justify-items: center; */
+	align-items: center;
+	@media (max-width: 512px) {
+		justify-self: end;
+	}
 `;
 
-const CragDesc = styled.h3`
+const CragLikeCount = styled.p`
+	grid-area: numbers;
+	font-size: 1rem;
+	place-self: normal;
+`;
+
+const CragLikeX = styled.span`
+	margin-right: 0.5rem;
+`;
+
+const CragDesc = styled.div`
 	grid-area: desc;
+	justify-items: center;
+	align-content: flex-start;
+	margin-top: 2rem;
+	margin-left: 5px;
+	overflow: auto;
+`;
+const CragDescText = styled.p`
+	font-size: 1.7rem;
+	margin: 0px;
+	@media (max-width: 900px) {
+		font-size: 1.5rem;
+	}
 `;
 
 const CragIcons = styled.p`
 	grid-area: desc;
+	color: orange;
 `;
 
 const CommentBoxGrid = styled.div`
 	grid-area: comments;
+	justify-self: stretch;
+	margin: 1rem;
 `;
 
 const LeaveAComment = styled.p`
 	grid-area: commentForm;
+`;
+
+const LoginRegisterLinks = styled.a`
+	color: orange;
+	text-decoration: none;
+`;
+
+const NoCommentsYet = styled.h4`
+	display: flex;
+	justify-content: center;
 `;
 
 class ShowCrag extends Component {
@@ -143,12 +260,6 @@ class ShowCrag extends Component {
 							<EditButton
 								href={`/crags/${this.state.crag.data._id}/edit`}
 								alt='edit'
-								style={{
-									border: 'solid 1px brown',
-									borderRadius: '50px',
-									padding: '2em',
-									justifySelf: 'center',
-								}}
 							>
 								<FaPencilAlt
 									style={{
@@ -169,33 +280,47 @@ class ShowCrag extends Component {
 							src={`/images/${this.state.crag.data.photo}`}
 							alt='crag'
 						/>
-						<CragLikes>
-							{this.state.crag.data.likes.length < 1 ? (
-								<div>
-									<IoThumbsUpOutline
-										style={{
-											width: '50px',
-											height: '50px',
-										}}
-									/>
-									<p>X {this.state.crag.data.likes.length}</p>
-								</div>
-							) : (
-								<div>
-									<IoThumbsUp
-										style={{
-											width: '50px',
-											height: '50px',
-											color: '#d9b92e',
-										}}
-									/>
-									<p>X {this.state.crag.data.likes.length}</p>
-								</div>
-							)}
-						</CragLikes>
+						{/* <CragLikes> */}
+						{this.state.crag.data.likes.length < 1 ? (
+							<CragLikes>
+								<IoThumbsUpOutline
+									style={{
+										width: '30px',
+										height: '30px',
+										gridArea: 'thumbs',
+										justifySelf: 'end',
+										marginRight: '10px',
+									}}
+								/>
+								<CragLikeCount>
+									<CragLikeX>x</CragLikeX>{' '}
+									{this.state.crag.data.likes.length}
+								</CragLikeCount>
+							</CragLikes>
+						) : (
+							<CragLikes>
+								<IoThumbsUp
+									style={{
+										width: '30px',
+										height: '30px',
+										color: '#d9b92e',
+										gridArea: 'thumbs',
+										justifySelf: 'end',
+										marginRight: '10px',
+									}}
+								/>
+								<CragLikeCount>
+									<CragLikeX>x</CragLikeX>{' '}
+									{this.state.crag.data.likes.length}
+								</CragLikeCount>
+							</CragLikes>
+						)}
+						{/* </CragLikes> */}
 						<CragDiff>{this.state.crag.data.difficulty}</CragDiff>
 						<CragDesc>
-							<h3>{this.state.crag.data.cragDescription}</h3>
+							<CragDescText>
+								{this.state.crag.data.cragDescription}
+							</CragDescText>
 							{this.state.crag.data.busyWeekend ? (
 								<CragIcons>Busy At The Weekend</CragIcons>
 							) : null}
@@ -215,24 +340,34 @@ class ShowCrag extends Component {
 						) : (
 							<LeaveAComment>
 								Want to leave a comment or thing the grading is
-								off? <a href='/login'>Login</a> or{' '}
-								<a href='/register'>Register</a> to create, edit
-								and leave comments...
+								off?{' '}
+								<LoginRegisterLinks href='/login'>
+									Login
+								</LoginRegisterLinks>{' '}
+								or{' '}
+								<LoginRegisterLinks href='/register'>
+									Register
+								</LoginRegisterLinks>{' '}
+								to create, edit and leave comments...
 							</LeaveAComment>
 						)}
 						<CommentBoxGrid>
-							{this.state.crag.data.comments.length
-								? this.state.crag.data.comments.map(
-										(comment, index) => {
-											return (
-												<CommentBox
-													key={index}
-													comment={comment}
-												/>
-											);
-										}
-								  )
-								: null}
+							{this.state.crag.data.comments.length ? (
+								this.state.crag.data.comments.map(
+									(comment, index) => {
+										return (
+											<CommentBox
+												key={index}
+												comment={comment}
+											/>
+										);
+									}
+								)
+							) : (
+								<NoCommentsYet>
+									No Comments written yet...
+								</NoCommentsYet>
+							)}
 						</CommentBoxGrid>
 					</ShowCragPage>
 				)}

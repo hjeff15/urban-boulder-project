@@ -68,8 +68,8 @@ exports.createCrag = async (req, res) => {
 };
 
 exports.getCrags = async (req, res) => {
-	// Query the database for all crags
-	const crags = await Crag.find();
+	// Query the database for all crags, and organise by the most recently created (this includes updates at the moment)
+	const crags = await Crag.find().sort({ created: -1 });
 	// console.log(crags);
 	res.send(crags);
 };
@@ -80,7 +80,7 @@ exports.editCrag = async (req, res) => {
 	res.json(crag);
 	//confirm they are the user
 	// THIS IS STILL TODO
-	//render out the edit form  so the user can update their store
+	//render out the edit form so the user can update their store
 };
 
 exports.updateCrag = async (req, res) => {

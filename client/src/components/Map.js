@@ -21,34 +21,75 @@ import styled from 'styled-components';
 import mapStyles from './mapStyles';
 import axios from 'axios';
 import { FaLocationArrow } from 'react-icons/fa';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import Loader from 'react-loader-spinner';
 
 const containerStyle = {
 	width: '100vw',
-	height: '100vh',
+	height: '76vh',
 };
 
-const ComboInput = styled.div`
-	display: flex;
-	flex-direction: row-reverse;
-`;
+// position: relative;
+// top: 5rem;
+// transform: translateX(40%);
+// z-index: 10;
+// display: grid;
+// grid-template-columns: 90% 10%;
+// grid-template-rows: 5rem;
+// grid-template-areas: 'search user-locate';
 
 const SearchBoxStyle = styled.div`
 	position: absolute;
-	top: 15rem;
-	transform: translateX(40%);
+	display: grid;
+	left: 25vw;
 	height: 2rem;
-	width: 36rem;
+	width: 45vw;
 	z-index: 10;
+	grid-template-columns: auto 3rem;
+	grid-template-areas: 'search button';
+`;
+
+const ComboInput = styled.div`
+	justify-self: start;
+	grid-area: search;
 `;
 
 const GetLocationButton = styled.button`
 	position: absolute;
-	top: 0.5em;
-	height: 2.5rem;
+	height: 100%;
+	width: 100%;
+	border: none;
 	z-index: 10;
-	background-color: deepskyblue;
-	margin-right: -5px;
+	background-color: #d9b92e;
+	justify-self: end;
 	cursor: pointer;
+	grid-area: button;
+`;
+
+const InfoWindowGrid = styled.div`
+	display: grid;
+	grid-template-columns: auto;
+	justify-items: center;
+	background-color: #08304b;
+`;
+
+const InfoWindowTitle = styled.a`
+	text-decoration: none;
+	color: #d9b92e;
+	&:hover {
+		text-decoration: underline;
+	}
+`;
+
+const InfoWindowDiff = styled.h3`
+	border: 1px solid #d9b92e;
+	color: #d9b92e;
+	padding: 0.2em;
+`;
+const InfoWindowImg = styled.img`
+	border-radius: 10px;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
 `;
 
 const center = {
@@ -57,15 +98,18 @@ const center = {
 };
 
 const radius = 10 * 1000; //km (I think...) could change dynamically???
+// const zoomLevel = 14;
 
 const options = {
 	styles: mapStyles,
+	mapTypeControl: false,
 };
 
 const libraries = ['places'];
 
 export default function Map() {
 	const [crags, setCrags] = useState([]);
+	const [loaded, setLoaded] = useState(false);
 	const [selected, setSelected] = useState(null);
 
 	useEffect(() => {
@@ -75,6 +119,7 @@ export default function Map() {
 			)
 			.then((res) => {
 				setCrags(res.data);
+				setLoaded(true);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -110,15 +155,40 @@ export default function Map() {
 	}, []);
 
 	if (loadError) return 'Error Loading Maps';
-	if (!isLoaded) return 'Loading Maps';
+	if (!isLoaded)
+		return (
+			<Loader
+				type='ThreeDots'
+				color='#d9b92e'
+				height={100}
+				width={100}
+				style={{
+					display: 'grid',
+					justifyContent: 'center',
+					backgroundColor: '#08304b',
+				}}
+			/>
+		);
 
 	return (
-		<div>
+		<React.Fragment>
+			{!loaded && (
+				<Loader
+					type='ThreeDots'
+					color='#d9b92e'
+					height={100}
+					width={100}
+					style={{
+						display: 'grid',
+						justifyContent: 'center',
+						backgroundColor: '#08304b',
+					}}
+				/>
+			)}
 			<Search panTo={panTo} />
-
 			<GoogleMap
 				mapContainerStyle={containerStyle}
-				zoom={12}
+				zoom={13}
 				center={center}
 				options={options}
 				onLoad={onMapLoad}
@@ -146,23 +216,27 @@ export default function Map() {
 							setSelected(null);
 						}}
 					>
-						<div>
+						<InfoWindowGrid>
 							<h2>
-								<a href={`/crag/${selected.slug}`}>
+								<InfoWindowTitle
+									href={`/crag/${selected.slug}`}
+								>
 									{selected.cragName}
-								</a>
+								</InfoWindowTitle>
 							</h2>
-							<img
+							<InfoWindowImg
 								src={`/images/${selected.photo}`}
 								width={150}
 								alt='cragImage'
 							/>
-							<h3>{selected.difficulty}</h3>
-						</div>
+							<InfoWindowDiff>
+								{selected.difficulty}
+							</InfoWindowDiff>
+						</InfoWindowGrid>
 					</InfoWindow>
 				) : null}
 			</GoogleMap>
-		</div>
+		</React.Fragment>
 	);
 }
 
@@ -233,17 +307,10 @@ function Search({ panTo }) {
 						disabled={!ready}
 						placeholder='Enter a location...'
 						style={{
-							position: 'absolute',
-							top: '0.5rem',
-							left: '50%',
-							transform: 'translateX(-50%)',
 							height: '2rem',
 							width: '100%',
-							maxWidth: '100%',
-							zIndex: '10',
 						}}
 					/>
-					<Locate panTo={panTo} />
 				</ComboInput>
 
 				<ComboboxPopover>
@@ -258,6 +325,7 @@ function Search({ panTo }) {
 					</ComboboxList>
 				</ComboboxPopover>
 			</Combobox>
+			<Locate panTo={panTo} />
 		</SearchBoxStyle>
 	);
 }

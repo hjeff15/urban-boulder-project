@@ -1,5 +1,78 @@
-import axios from 'axios';
 import React, { Component } from 'react';
+import axios from 'axios';
+import styled from 'styled-components';
+
+const Container = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, auto);
+	grid-template-rows: repeat(2, auto);
+	grid-template-areas: 'title title' 'form form';
+`;
+
+const Title = styled.h1`
+	grid-area: title;
+	justify-self: center;
+	font-size: 1.8rem;
+	@media (max-width: 512px) {
+		font-size: 1.5rem;
+	}
+`;
+const Form = styled.form`
+	grid-area: form;
+	display: grid;
+	grid-template-columns: repeat(4, auto);
+	grid-template-rows: repeat(5, auto);
+	grid-template-areas:
+		'. new-label new-label .'
+		'. new-input new-input .'
+		'. confirm-new-label confirm-new-label .'
+		'. confirm-new-input confirm-new-input .'
+		'. button button .';
+`;
+const PasswordLabel = styled.label`
+	grid-area: new-label;
+	font-size: 1.5rem;
+	justify-self: start;
+	@media (max-width: 512px) {
+		font-size: 1.2rem;
+	}
+`;
+const PasswordInput = styled.input`
+	grid-area: new-input;
+	height: 2rem;
+	font-size: 0.8rem;
+	width: auto;
+	justify-self: stretch;
+`;
+const PasswordConfirmLabel = styled.label`
+	grid-area: confirm-new-label;
+	font-size: 1.5rem;
+	justify-self: start;
+	@media (max-width: 512px) {
+		font-size: 1.2rem;
+	}
+`;
+const PasswordConfirmInput = styled.input`
+	grid-area: confirm-new-input;
+	height: 2rem;
+	font-size: 0.8rem;
+	width: auto;
+	justify-self: stretch;
+`;
+
+const Button = styled.input`
+	grid-area: button;
+	background-color: #d9b92e;
+	color: white;
+	border-radius: 10px;
+	border: none;
+	justify-self: center;
+	width: 15rem;
+	height: 2rem;
+	font-size: 1.2rem;
+	cursor: pointer;
+	margin-top: 10px;
+`;
 
 export default class Reset extends Component {
 	constructor() {
@@ -86,39 +159,39 @@ export default class Reset extends Component {
 
 	render() {
 		return (
-			<div>
-				<h1>Reset Your Password</h1>
+			<Container>
+				<Title>Reset Your Password</Title>
 				{this.state.msg && <h3>{this.state.msg}</h3>}
 				{!this.state.msg && (
-					<form action='post' onSubmit={this.submitNewPassword}>
-						<label>
-							New Password:
-							<input
-								type='text'
-								name='password'
-								defaultValue={this.state.newPassword}
-								onChange={this.passwordInput}
-							/>
-						</label>
-						<label>
+					<Form action='post' onSubmit={this.submitNewPassword}>
+						<PasswordLabel>New Password:</PasswordLabel>
+						<PasswordInput
+							type='text'
+							name='password'
+							defaultValue={this.state.newPassword}
+							onChange={this.passwordInput}
+						/>
+
+						<PasswordConfirmLabel>
 							Confirm New Password:
-							<input
-								type='text'
-								name='confirm-password'
-								defaultValue={this.state.newPasswordConfirm}
-								onChange={this.passwordConfirmInput}
-							/>
-						</label>
+						</PasswordConfirmLabel>
+						<PasswordConfirmInput
+							type='text'
+							name='confirm-password'
+							defaultValue={this.state.newPasswordConfirm}
+							onChange={this.passwordConfirmInput}
+						/>
+
 						{this.state.matchPasswordMessage && (
 							<h2>
 								Looks like your passwords don't match. Please
 								check and try again.
 							</h2>
 						)}
-						<input type='submit' />
-					</form>
+						<Button type='submit' value='Reset Password' />
+					</Form>
 				)}
-			</div>
+			</Container>
 		);
 	}
 }

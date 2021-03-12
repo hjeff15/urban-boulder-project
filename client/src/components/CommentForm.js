@@ -6,23 +6,38 @@ const CommentFormDiv = styled.div`
 	grid-area: commentForm;
 	box-sizing: border-box;
 	display: grid;
-	grid-template-rows: 0.7fr 2fr 0.7fr;
+	grid-template-rows: repeat(2, auto);
 	grid-template-areas:
 		'title'
-		'textArea'
-		'grades';
+		'form';
 `;
 
 const FormTitle = styled.p`
 	grid-area: title;
+	color: #d9b92e;
+	font-size: 1.5rem;
+	justify-self: center;
+`;
+
+const Form = styled.form`
+	grid-area: form;
+	display: grid;
+	grid-template-rows: repeat(3, auto);
+	grid-template-areas:
+		'textArea'
+		'grades'
+		'button';
+	margin-bottom: 1rem;
 `;
 
 const ReviewTextArea = styled.textarea`
 	grid-area: textArea;
 `;
 
-const GradeDiv = styled.div`
+const GradeContainer = styled.div`
 	grid-area: grades;
+	justify-self: center;
+	margin: 1rem;
 `;
 
 const GradeInput = styled.input`
@@ -31,9 +46,25 @@ const GradeInput = styled.input`
 
 const GradeLabel = styled.label`
 	cursor: pointer;
+	font-size: 1.2rem;
 	:hover {
 		color: #d9b92e;
+		font-size: 1.6rem;
 	}
+`;
+
+const SubmitButton = styled.button`
+	grid-area: button;
+	background-color: #d9b92e;
+	color: white;
+	border-radius: 10px;
+	border: none;
+	justify-self: center;
+	width: 15rem;
+	height: 2rem;
+	font-size: 1.2rem;
+	cursor: pointer;
+	margin-top: 10px;
 `;
 
 const grades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -89,7 +120,7 @@ class CommentForm extends Component {
 		return (
 			<CommentFormDiv>
 				<FormTitle>CRAG COMMENT FORM</FormTitle>
-				<form onSubmit={this.submitForm}>
+				<Form onSubmit={this.submitForm}>
 					<ReviewTextArea
 						name='text'
 						placeholder='Climbed this? Have something to say? Think the grading needs correcting? Leave a comment here...'
@@ -97,8 +128,8 @@ class CommentForm extends Component {
 						rows='10'
 						required
 						onChange={this.handleTextChange}
-					></ReviewTextArea>
-					<GradeDiv>
+					/>
+					<GradeContainer>
 						{grades.map((grade, index) => {
 							return (
 								<GradeLabel
@@ -106,6 +137,7 @@ class CommentForm extends Component {
 									key={index}
 									onClick={this.handleClick}
 								>
+									{' '}
 									{`v${grade}`}
 									<GradeInput
 										type='radio'
@@ -117,10 +149,9 @@ class CommentForm extends Component {
 								</GradeLabel>
 							);
 						})}
-					</GradeDiv>
-
-					<button type='submit'>Sumbit</button>
-				</form>
+					</GradeContainer>
+					<SubmitButton type='submit'>Sumbit</SubmitButton>
+				</Form>
 			</CommentFormDiv>
 		);
 	}

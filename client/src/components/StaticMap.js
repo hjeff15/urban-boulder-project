@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-const MapImage = styled.div`
+const MapImageContainer = styled.div`
 	grid-area: map;
+	display: grid;
+`;
+
+const MapImage = styled.img`
+	justify-self: center;
+	align-self: center;
+	object-fit: cover;
+	width: 95%;
+	height: 95%;
+	border-radius: 5px;
+	@media (max-width: 900px) {
+		width: 100%;
+	}
 `;
 
 export default class StaticMap extends Component {
@@ -25,12 +38,12 @@ export default class StaticMap extends Component {
 
 	render() {
 		return (
-			<MapImage>
-				<img
+			<MapImageContainer>
+				<MapImage
 					src={`https://maps.googleapis.com/maps/api/staticmap?center=${this.state.lng},${this.state.lat}&zoom=${this.state.zoom}&size=${this.state.size}&key=${process.env.REACT_APP_MAP_KEY}&markers=${this.state.lng},${this.state.lat}&scale=${this.state.scale}`}
 					alt='location'
 				/>
-			</MapImage>
+			</MapImageContainer>
 		);
 	}
 }

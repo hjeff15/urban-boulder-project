@@ -55,10 +55,10 @@ export default class EditCrag extends Component {
 
 	render() {
 		return (
-			<div>
-				<h1>Edit Form</h1>
+			<React.Fragment>
+				{/* <h1>Edit Form</h1> */}
 				{this.state.msg && <h2>{this.state.msg}</h2>}
-				{this.state.loaded && <h2>{this.state.crag.data.cragName}</h2>}
+				{/* {this.state.loaded && <h2>{this.state.crag.data.cragName}</h2>} */}
 				{this.state.loaded && (
 					<Create
 						cragCardInfo={this.state.crag}
@@ -66,7 +66,7 @@ export default class EditCrag extends Component {
 						user={localStorage}
 					/>
 				)}
-			</div>
+			</React.Fragment>
 		);
 	}
 }

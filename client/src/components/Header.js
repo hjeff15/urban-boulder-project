@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import SearchBox from './Searchbox';
+import { Squash as Hamburger } from 'hamburger-react';
 
 //STYLES
 
@@ -13,6 +14,10 @@ const PageHeader = styled.header`
 	display: grid;
 	grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr;
 	border-bottom: solid 2px #fff;
+	@media (max-width: 512px) {
+		grid-template-columns: 100vw;
+		grid-grid-template-rows: repeat(2, auto);
+	}
 `;
 
 const Title = styled.h1`
@@ -26,53 +31,138 @@ const Title = styled.h1`
 		text-decoration: none;
 		cursor: pointer;
 	}
+	@media (max-width: 790px) {
+		font-size: 1.5rem;
+	}
 `;
 
 const Navigators = styled.a`
 	color: #d9b92e;
-	font-size: 1.4rem;
+	font-size: 1.7rem;
 	text-decoration: none;
-	/* margin-top: 0.8rem; */
-	margin: 0.5rem;
-	/* border: white solid 1px; */
-	/* border-radius: 5px 20px 20px 5px; */
-	padding: 10px;
-	padding-top: 2.2rem;
+	justify-self: center;
+	align-self: center;
+	&:hover {
+		text-decoration: underline;
+	}
+	@media (max-width: 790px) {
+		font-size: 1.3rem;
+	}
+	@media (max-width: 512px) {
+		display: none;
+	}
 `;
 
 const Logout = styled.p`
-	color: white;
+	color: #d9b92e;
 	font-size: 1.4rem;
-	/* margin-top: 0.8rem; */
-	margin: 0.5rem;
-	/* border: white solid 1px;
-	border-radius: 5px 20px 20px 5px; */
-	padding: 10px;
-	padding-top: 2.2rem;
+	justify-self: center;
+	align-self: center;
 	cursor: pointer;
+	@media (max-width: 512px) {
+		display: none;
+	}
+	@media (max-width: 790px) {
+		font-size: 1.2rem;
+	}
 `;
 
 const LoginNav = styled.a`
-	color: white;
-	/* border: white solid 1px;
-	border-radius: 5px 20px 20px 5px; */
+	color: #d9b92e;
 	margin: 0.5rem;
 	display: grid;
 	grid-template-rows: 80% 1fr;
 	text-decoration: none;
+	@media (max-width: 512px) {
+		grid-column: 5;
+	}
 `;
 
 const Gravatar = styled.img`
 	width: 70px;
 	border-radius: 40px;
 	place-self: center;
+	@media (max-width: 790px) {
+		width: 50px;
+	}
+	@media (max-width: 512px) {
+		display: none;
+	}
 `;
 
 const DashboardText = styled.p`
 	margin: 0px;
 	place-self: center;
 	text-decoration: none;
+	@media (max-width: 790px) {
+		font-size: 0.9rem;
+	}
+	@media (max-width: 512px) {
+		display: none;
+	}
 `;
+
+const HamburgerContainer = styled.div`
+	display: none;
+	@media (max-width: 512px) {
+		display: grid;
+		grid-template-columns: 100vw;
+		/* justify-self: center;
+		align-self: center; */
+		justify-items: center;
+		grid-row: 2;
+	}
+`;
+
+const HamburgerItems = styled.a`
+	font-size: 2rem;
+	color: #d9b92e;
+	text-decoration: none;
+	border-bottom: white solid 1px;
+	width: 100vw;
+	&:hover {
+		text-decoration: underline;
+	}
+`;
+
+const menuItems = [
+	{
+		link: {
+			name: 'home',
+			path: '/',
+		},
+	},
+	{
+		link: {
+			name: 'about',
+			path: '/about',
+		},
+	},
+	{
+		link: {
+			name: 'map',
+			path: '/map',
+		},
+	},
+	{
+		link: {
+			name: 'create',
+			path: '/create',
+		},
+	},
+	{
+		link: {
+			name: 'login',
+			path: '/login',
+		},
+	},
+	{
+		link: {
+			name: 'logout',
+			path: '/logout',
+		},
+	},
+];
 
 class Header extends Component {
 	constructor(props) {
@@ -80,6 +170,7 @@ class Header extends Component {
 		this.state = {
 			search: '',
 			userLoaded: false,
+			showNavigators: false,
 		};
 	}
 
@@ -100,7 +191,7 @@ class Header extends Component {
 
 	render() {
 		return (
-			<div>
+			<React.Fragment>
 				<PageHeader>
 					<Title>
 						<a href='/'>
@@ -108,7 +199,6 @@ class Header extends Component {
 							Boulder Project
 						</a>
 					</Title>
-
 					<Navigators href='/about'>About</Navigators>
 					<Navigators href='/map'>Map</Navigators>
 					<Navigators href='/create'>Create</Navigators>
@@ -130,9 +220,37 @@ class Header extends Component {
 					) : (
 						<Navigators href='/register'>Register</Navigators>
 					)}
+					<HamburgerContainer>
+						<Hamburger
+							color='#d9b92e'
+							size={80}
+							rounded
+							label='Show menu'
+							duration={0.3}
+							distance='sm'
+							onToggle={(toggled) => {
+								if (toggled) {
+									this.setState({ showNavigators: true });
+								} else {
+									this.setState({ showNavigators: false });
+								}
+							}}
+						/>
+						{this.state.showNavigators &&
+							Object.entries(menuItems).map((item, index) => {
+								return (
+									<HamburgerItems
+										key={index}
+										href={item[1].link.path}
+									>
+										{item[1].link.name}
+									</HamburgerItems>
+								);
+							})}
+					</HamburgerContainer>
 				</PageHeader>
 				<SearchBox />
-			</div>
+			</React.Fragment>
 		);
 	}
 }

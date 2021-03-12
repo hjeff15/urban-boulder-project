@@ -1,21 +1,37 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import Loader from 'react-loader-spinner';
+
+// Components
 import CragCard from './CragCard';
 
 const HomeDiv = styled.div`
 	background-color: #08304b;
+	display: grid;
+	margin: 0px;
 `;
 
 const CragCardList = styled.ul`
 	box-sizing: border-box;
 	display: grid;
-	grid-template-columns: 50% 50%;
+	grid-template-columns: repeat(3, 32vw);
 	grid-template-rows: auto;
 	grid-gap: 10px;
-	margin: 15px;
-	margin-top: 0px;
-	padding: 10px;
+	/* margin: 15px; */
+	margin: 0px;
+	padding-left: 5px;
+	@media (max-width: 670px) {
+		grid-template-columns: repeat(2, 49vw);
+		padding-left: 0px;
+		grid-gap: 3px;
+	}
+	@media (max-width: 400px) {
+		grid-template-columns: auto;
+		padding: 10px;
+		grid-gap: 10px;
+	}
 `;
 
 const ListItem = styled.li`
@@ -24,14 +40,23 @@ const ListItem = styled.li`
 	border-radius: 10px;
 `;
 
-const Msg = styled.h2`
-	color: white;
+const Msg = styled.h4`
+	background-color: #ffe3f1;
+	color: red;
+	border-radius: 10px;
 	margin-top: 0px;
+	padding: 2px 10px 2px 10px;
+	justify-self: center;
+	margin-bottom: auto;
 `;
 
 const LoginMsg = styled.h3`
-	color: white;
+	color: green;
 	margin-top: 0px;
+	justify-self: center;
+	@media (max-width: 300px) {
+		font-size: 0.9rem;
+	}
 `;
 
 export default class Home extends Component {
@@ -43,6 +68,7 @@ export default class Home extends Component {
 			crags: {},
 			user: {},
 			msg: '',
+			welcomeMsg: '',
 		};
 	}
 
@@ -99,7 +125,19 @@ export default class Home extends Component {
 						'name'
 					)}`}</LoginMsg>
 				) : null}
-				{!this.state.loaded && <p>Loading...</p>}
+				{!this.state.loaded && (
+					<Loader
+						type='ThreeDots'
+						color='#d9b92e'
+						height={100}
+						width={100}
+						style={{
+							display: 'grid',
+							// backgroundColor: 'white',
+							justifySelf: 'center',
+						}}
+					/>
+				)}
 				{this.state.loaded && (
 					<CragCardList className='crag-cards'>
 						{Object.keys(this.state.crags.data).map(

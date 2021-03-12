@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 import About from './components/About';
-import Crags from './components/Crags';
 import Create from './components/Create';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -126,7 +125,6 @@ class App extends Component {
 					)}
 				/>
 				<Route path='/about' component={About} />
-				<Route path='/crags' component={Crags} />
 				<ProtectedRoute path='/create' user={user} component={Create} />
 				<ProtectedRoute
 					path='/dashboard'

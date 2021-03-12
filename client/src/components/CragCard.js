@@ -17,6 +17,9 @@ const CragCardStyle = styled.div`
 		'image image image diff'
 		'desc desc desc desc';
 	align-items: stretch;
+	@media (max-width: 790px) {
+		grid-template-rows: 3.5rem 7rem 3rem 3rem;
+	}
 `;
 
 const CardTitle = styled.h2`
@@ -26,6 +29,9 @@ const CardTitle = styled.h2`
 	border-radius: 20px;
 	place-self: center;
 	grid-area: header;
+	@media (max-width: 790px) {
+		font-size: 1rem;
+	}
 `;
 
 const CardATag = styled.a`
@@ -34,25 +40,37 @@ const CardATag = styled.a`
 	padding-left: 1rem;
 	padding-right: 1rem;
 	cursor: pointer;
+	&:hover {
+		color: #d9b92e;
+	}
 `;
 
 const CragDescription = styled.h4`
 	color: white;
 	grid-area: desc;
 	padding-left: 1rem;
+	@media (max-width: 790px) {
+		margin-top: 10px;
+	}
 `;
 
 const CragDifficulty = styled.h3`
 	color: #d9b92e;
 	grid-area: diff;
 	justify-self: center;
-	font-size: 50px;
-	margin: 30px;
-	width: 80px;
-	height: 80px;
-	line-height: 80px;
+	font-size: 42px;
+	margin: 0px;
+	width: 70px;
+	height: 70px;
+	line-height: 70px;
 	text-align: center;
 	border: 1px solid #d9b92e;
+	@media (max-width: 790px) {
+		font-size: 1.5rem;
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
+	}
 `;
 
 const CragImage = styled.img`
@@ -63,6 +81,8 @@ const CragImage = styled.img`
 	object-fit: cover;
 	width: 100%;
 	max-height: 100%;
+	@media (max-width: 790px) {
+	}
 `;
 
 const LikeButton = styled.form`
@@ -78,7 +98,6 @@ const LikeNumber = styled.p`
 	border: 1px solid #d9b92e;
 	color: white;
 	border-radius: 50%;
-	margin-left: 0.5rem;
 `;
 
 export default class CragCard extends Component {
@@ -178,14 +197,14 @@ export default class CragCard extends Component {
 						) ? (
 							<IoThumbsUp
 								style={{
-									width: '50px',
-									height: '50px',
+									width: '40px',
+									height: '40px',
 									color: '#d9b92e',
 								}}
 							/>
 						) : (
 							<IoThumbsUpOutline
-								style={{ width: '50px', height: '50px' }}
+								style={{ width: '40px', height: '40px' }}
 							/>
 						)}
 						<LikeNumber>
