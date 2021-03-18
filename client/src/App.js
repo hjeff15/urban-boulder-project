@@ -40,6 +40,8 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 	);
 };
 
+let timer = null;
+
 class App extends Component {
 	constructor() {
 		super();
@@ -60,14 +62,15 @@ class App extends Component {
 			localStorage.getItem('name') &&
 			localStorage.getItem('_id') &&
 			localStorage.getItem('emailHash') &&
-			localStorage.getItem('likes') &&
 			localStorage.getItem('loggedIn')
 		) {
 			const user = { ...this.state.user };
 			user.name = localStorage.getItem('name');
 			user._id = localStorage.getItem('_id');
 			user.emailHash = localStorage.getItem('emailHash');
-			user.likes = localStorage.getItem('likes');
+			if (localStorage.getItem('likes')) {
+				user.likes = localStorage.getItem('likes');
+			}
 			this.setState({
 				user,
 				loggedIn: true,
@@ -107,51 +110,76 @@ class App extends Component {
 		}
 	};
 
+	loginTimer() {
+		let timerStart = Date.now();
+		const timeoutTime = timerStart + 3 * 1000; // 5 seconds
+		let time = timeoutTime - timerStart;
+		timer = setTimeout(() => {
+			console.log('LOGGED YOU OUT');
+		}, time);
+		console.log('Timer has started: ' + timerStart);
+	}
+
+	resetTimer = () => {
+		clearTimeout(timer);
+		this.state.loggedIn ? this.loginTimer() : (timer = null);
+	};
+
 	render() {
 		const { user } = this.state;
 
 		return (
 			<Router>
-				<Header user={user} updateUser={this.updateUser} />
-				<Route
-					path='/'
-					exact
-					render={(props) => (
-						<Home
-							{...props}
-							user={user}
-							updateLikes={this.updateLikes}
-						/>
-					)}
-				/>
-				<Route path='/about' component={About} />
-				<ProtectedRoute path='/create' user={user} component={Create} />
-				<ProtectedRoute
-					path='/dashboard'
-					user={user}
-					component={Dashboard}
-				/>
-				<Route
-					path='/login'
-					render={(props) => (
-						<Login {...props} updateUser={this.updateUser} />
-					)}
-				/>
-				<Route
-					path='/register'
-					render={(props) => (
-						<Register {...props} updateUser={this.updateUser} />
-					)}
-				/>
-				<Route path='/map' component={Map} />
-				<Route path='/crags/:id/edit' component={EditCrag} />
-				<Route
-					path='/crag/:slug'
-					exact
-					render={(props) => <ShowCrag {...props} user={user} />}
-				/>
-				<Route path='/account/reset/:token' component={Reset} />
-				<Route path='/404' component={WrongURL} />
+				<div onClick={this.resetTimer}>
+					<Header user={user} updateUser={this.updateUser} />
+					<Route
+						path='/'
+						exact
+						render={(props) => (
+							<Home
+								{...props}
+								user={user}
+								updateLikes={this.updateLikes}
+							/>
+						)}
+					/>
+					<Route path='/about' component={About} />
+					<ProtectedRoute
+						path='/create'
+						user={user}
+						component={Create}
+					/>
+					<ProtectedRoute
+						path='/dashboard'
+						user={user}
+						component={Dashboard}
+					/>
+					<Route
+						path='/login'
+						render={(props) => (
+							<Login
+								{...props}
+								updateUser={this.updateUser}
+								loginTimer={this.loginTimer}
+							/>
+						)}
+					/>
+					<Route
+						path='/register'
+						render={(props) => (
+							<Register {...props} updateUser={this.updateUser} />
+						)}
+					/>
+					<Route path='/map' component={Map} />
+					<Route path='/crags/:id/edit' component={EditCrag} />
+					<Route
+						path='/crag/:slug'
+						exact
+						render={(props) => <ShowCrag {...props} user={user} />}
+					/>
+					<Route path='/account/reset/:token' component={Reset} />
+					<Route path='/404' component={WrongURL} />
+				</div>
 			</Router>
 		);
 	}

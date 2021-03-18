@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Loader from 'react-loader-spinner';
+//Components
+import Footer from './Footer';
 
 // Components
 import CragCard from './CragCard';
@@ -11,6 +13,7 @@ const HomeDiv = styled.div`
 	background-color: #08304b;
 	display: grid;
 	margin: 0px;
+	justify-items: center;
 `;
 
 const CragCardList = styled.ul`
@@ -43,6 +46,16 @@ const ListItem = styled.li`
 const Msg = styled.h4`
 	background-color: #ffe3f1;
 	color: red;
+	border-radius: 10px;
+	margin-top: 0px;
+	padding: 2px 10px 2px 10px;
+	justify-self: center;
+	margin-bottom: auto;
+`;
+
+const WelcomeMsg = styled.h4`
+	/* background-color: blue; */
+	color: orange;
 	border-radius: 10px;
 	margin-top: 0px;
 	padding: 2px 10px 2px 10px;
@@ -92,9 +105,20 @@ export default class Home extends Component {
 	}
 
 	checkMsg() {
-		return this.props.location.state
-			? this.setState({ msg: this.props.location.state.msg })
-			: this.setState({ msg: '' });
+		if (this.props.location.state) {
+			if (this.props.location.state.msg) {
+				this.setState({ msg: this.props.location.state.msg });
+			}
+			if (this.props.location.state.welcomeMsg) {
+				this.setState({
+					welcomeMsg: this.props.location.state.welcomeMsg,
+				});
+			} else {
+				this.setState({ welcomeMsg: '' });
+			}
+		} else {
+			this.setState({ msg: '', welcomeMsg: '' });
+		}
 	}
 
 	async fetchData() {
@@ -120,6 +144,9 @@ export default class Home extends Component {
 		return (
 			<HomeDiv>
 				{this.state.msg && <Msg>{this.state.msg}</Msg>}
+				{this.state.welcomeMsg && (
+					<WelcomeMsg>{this.state.welcomeMsg}</WelcomeMsg>
+				)}
 				{localStorage.getItem('name') ? (
 					<LoginMsg>{`Currently Logged In as:  ${localStorage.getItem(
 						'name'
@@ -127,13 +154,12 @@ export default class Home extends Component {
 				) : null}
 				{!this.state.loaded && (
 					<Loader
-						type='ThreeDots'
+						type='TailSpin'
 						color='#d9b92e'
 						height={100}
 						width={100}
 						style={{
 							display: 'grid',
-							// backgroundColor: 'white',
 							justifySelf: 'center',
 						}}
 					/>
@@ -161,6 +187,7 @@ export default class Home extends Component {
 						)}
 					</CragCardList>
 				)}
+				<Footer />
 			</HomeDiv>
 		);
 	}

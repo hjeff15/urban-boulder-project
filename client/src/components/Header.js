@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import SearchBox from './Searchbox';
-import { Squash as Hamburger } from 'hamburger-react';
+//Copmponents
+import HamburgerNav from './HamburgerNav';
+import Navigator from './Navigator';
 
 //STYLES
-
 const PageHeader = styled.header`
 	font-family: 'Roboto', sans-serif;
 	background-color: #02263d;
@@ -67,12 +68,13 @@ const Logout = styled.p`
 	}
 `;
 
-const LoginNav = styled.a`
+const LoginNav = styled.div`
 	color: #d9b92e;
 	margin: 0.5rem;
 	display: grid;
 	grid-template-rows: 80% 1fr;
 	text-decoration: none;
+	cursor: pointer;
 	@media (max-width: 512px) {
 		grid-column: 5;
 	}
@@ -107,62 +109,10 @@ const HamburgerContainer = styled.div`
 	@media (max-width: 512px) {
 		display: grid;
 		grid-template-columns: 100vw;
-		/* justify-self: center;
-		align-self: center; */
 		justify-items: center;
 		grid-row: 2;
 	}
 `;
-
-const HamburgerItems = styled.a`
-	font-size: 2rem;
-	color: #d9b92e;
-	text-decoration: none;
-	border-bottom: white solid 1px;
-	width: 100vw;
-	&:hover {
-		text-decoration: underline;
-	}
-`;
-
-const menuItems = [
-	{
-		link: {
-			name: 'home',
-			path: '/',
-		},
-	},
-	{
-		link: {
-			name: 'about',
-			path: '/about',
-		},
-	},
-	{
-		link: {
-			name: 'map',
-			path: '/map',
-		},
-	},
-	{
-		link: {
-			name: 'create',
-			path: '/create',
-		},
-	},
-	{
-		link: {
-			name: 'login',
-			path: '/login',
-		},
-	},
-	{
-		link: {
-			name: 'logout',
-			path: '/logout',
-		},
-	},
-];
 
 class Header extends Component {
 	constructor(props) {
@@ -170,17 +120,16 @@ class Header extends Component {
 		this.state = {
 			search: '',
 			userLoaded: false,
-			showNavigators: false,
+			collapseBurger: false,
 		};
 	}
 
-	logout = (e) => {
-		axios.get('http://localhost:4000/logout').then((res) => {
-			console.log(res);
+	logout = async (e) => {
+		await axios.get('http://localhost:4000/logout').then((res) => {
 			localStorage.clear();
 			this.props.updateUser();
-			this.props.history.push('/', { msg: 'Logged out!' });
 		});
+		this.props.history.push('/', { msg: 'Logged out!' });
 	};
 
 	checkMsg = () => {
@@ -199,11 +148,17 @@ class Header extends Component {
 							Boulder Project
 						</a>
 					</Title>
-					<Navigators href='/about'>About</Navigators>
-					<Navigators href='/map'>Map</Navigators>
-					<Navigators href='/create'>Create</Navigators>
+					<Navigator path='/about' name='About' />
+					<Navigator path='/map' name='Map' />
+					<Navigator path='/create' name='Create' />
 					{localStorage.getItem('emailHash') ? (
-						<LoginNav href={`/dashboard/${this.props.user._id}`}>
+						<LoginNav
+							onClick={() =>
+								this.props.history.push(
+									`/dashboard/${this.props.user._id}`
+								)
+							}
+						>
 							<Gravatar
 								src={`https://www.gravatar.com/avatar/${localStorage.getItem(
 									'emailHash'
@@ -213,40 +168,19 @@ class Header extends Component {
 							<DashboardText>Dashboard</DashboardText>
 						</LoginNav>
 					) : (
-						<Navigators href='/login'>Login</Navigators>
+						<Navigator path='/login' name='Login' />
 					)}
 					{localStorage.getItem('name') ? (
 						<Logout onClick={this.logout}>Logout</Logout>
 					) : (
-						<Navigators href='/register'>Register</Navigators>
+						<Navigator path='/register' name='Register' />
 					)}
 					<HamburgerContainer>
-						<Hamburger
-							color='#d9b92e'
-							size={80}
-							rounded
-							label='Show menu'
-							duration={0.3}
-							distance='sm'
-							onToggle={(toggled) => {
-								if (toggled) {
-									this.setState({ showNavigators: true });
-								} else {
-									this.setState({ showNavigators: false });
-								}
-							}}
+						<HamburgerNav
+							user={this.props.user}
+							logout={this.logout}
+							collapseBurger={this.state.collapseBurger}
 						/>
-						{this.state.showNavigators &&
-							Object.entries(menuItems).map((item, index) => {
-								return (
-									<HamburgerItems
-										key={index}
-										href={item[1].link.path}
-									>
-										{item[1].link.name}
-									</HamburgerItems>
-								);
-							})}
 					</HamburgerContainer>
 				</PageHeader>
 				<SearchBox />

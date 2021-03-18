@@ -237,6 +237,12 @@ export default class Register extends Component {
 				localStorage.setItem('_id', res.data._id);
 				localStorage.setItem('emailHash', res.data.emailHash);
 				localStorage.setItem('loggedIn', true);
+				this.props.updateUser(
+					res.data.name,
+					res.data._id,
+					res.data.emailHash,
+					res.data.likes
+				);
 				this.props.history.push({
 					pathname: '/',
 					state: {

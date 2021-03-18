@@ -10,7 +10,7 @@ const CragCardStyle = styled.div`
 	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: 20% 30% 15% 35%;
-	grid-template-rows: 3.5rem 7rem 5rem 3.5rem;
+	grid-template-rows: 3.5rem 7rem 5rem auto;
 	grid-template-areas:
 		'header header header header'
 		'image image image likes'
@@ -18,7 +18,7 @@ const CragCardStyle = styled.div`
 		'desc desc desc desc';
 	align-items: stretch;
 	@media (max-width: 790px) {
-		grid-template-rows: 3.5rem 7rem 3rem 3rem;
+		grid-template-rows: 3.5rem 7rem 3rem auto;
 	}
 `;
 
@@ -49,6 +49,8 @@ const CragDescription = styled.h4`
 	color: white;
 	grid-area: desc;
 	padding-left: 1rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
 	@media (max-width: 790px) {
 		margin-top: 10px;
 	}
@@ -60,14 +62,14 @@ const CragDifficulty = styled.h3`
 	justify-self: center;
 	font-size: 42px;
 	margin: 0px;
-	width: 70px;
+	width: 80%;
 	height: 70px;
 	line-height: 70px;
 	text-align: center;
 	border: 1px solid #d9b92e;
 	@media (max-width: 790px) {
 		font-size: 1.5rem;
-		width: 40px;
+		width: 80%;
 		height: 40px;
 		line-height: 40px;
 	}
@@ -118,10 +120,6 @@ export default class CragCard extends Component {
 
 	submitLike = async (e) => {
 		e.preventDefault();
-		// const currentLocalStorage = JSON.parse(localStorage.getItem('likes'));
-		// const newString = this.props.cragInfo._id;
-		// currentLocalStorage.push(newString);
-		// console.log(currentLocalStorage);
 		if (this.props.user._id === '') {
 			this.props.addMsg('You gotta be logged in to do that...');
 			return;
@@ -147,12 +145,18 @@ export default class CragCard extends Component {
 			<CragCardStyle>
 				<CardTitle>
 					<CardATag href={`/crag/${this.props.cragInfo.slug}`}>
-						{this.props.cragInfo.cragName
+						{this.props.cragInfo.cragName.split('').length < 12
+							? this.props.cragInfo.cragName.toUpperCase()
+							: this.props.cragInfo.cragName
+									.split('')
+									.slice(0, 11)
+									.join('')
+									.toUpperCase() + '...'}
+						{/* {this.props.cragInfo.cragName
 							.split(' ')
-							.splice(0, 4)
+							.splice(0, 2)
 							.join(' ')
-							.toUpperCase()}
-						...
+							.toUpperCase()} */}
 					</CardATag>
 				</CardTitle>
 
@@ -172,11 +176,12 @@ export default class CragCard extends Component {
 					/>
 				)}
 				<CragDescription>
-					{this.props.cragInfo.cragDescription
-						.split(' ')
-						.splice(0, 7)
-						.join(' ')}
-					...
+					{this.props.cragInfo.cragDescription.split('').length < 25
+						? this.props.cragInfo.cragDescription
+						: this.props.cragInfo.cragDescription
+								.split('')
+								.slice(0, 25)
+								.join('') + '...'}
 				</CragDescription>
 				<CragDifficulty>
 					{this.props.cragInfo.difficulty}

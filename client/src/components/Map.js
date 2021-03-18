@@ -47,6 +47,13 @@ const SearchBoxStyle = styled.div`
 	z-index: 10;
 	grid-template-columns: auto 3rem;
 	grid-template-areas: 'search button';
+	@media (max-width: 512px) {
+		grid-template-columns: 85vw 15vw;
+		margin-top: 20px;
+		margin-left: 0px;
+		width: auto;
+		left: 0;
+	}
 `;
 
 const ComboInput = styled.div`
@@ -103,6 +110,7 @@ const radius = 10 * 1000; //km (I think...) could change dynamically???
 const options = {
 	styles: mapStyles,
 	mapTypeControl: false,
+	fullscreenControl: false,
 };
 
 const libraries = ['places'];
@@ -158,7 +166,7 @@ export default function Map() {
 	if (!isLoaded)
 		return (
 			<Loader
-				type='ThreeDots'
+				type='TailSpin'
 				color='#d9b92e'
 				height={100}
 				width={100}
@@ -174,7 +182,7 @@ export default function Map() {
 		<React.Fragment>
 			{!loaded && (
 				<Loader
-					type='ThreeDots'
+					type='TailSpin'
 					color='#d9b92e'
 					height={100}
 					width={100}

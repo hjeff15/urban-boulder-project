@@ -9,6 +9,9 @@ const Container = styled.div`
 	grid-template-areas: 'form';
 	justify-items: center;
 	margin-top: 5rem;
+	@media (max-width: 275px) {
+		margin-top: 2rem;
+	}
 `;
 
 const FormContainer = styled.form`
@@ -23,6 +26,23 @@ const FormContainer = styled.form`
 		'email-label email email'
 		'. submit submit';
 	border-radius: 5px;
+	@media (max-width: 470px) {
+		grid-template-columns: minmax(250px, auto);
+		grid-template-rows: repeat(2, auto) repeat(5, auto);
+		grid-template-areas:
+			'title'
+			'subtitle'
+			'name-label'
+			'name'
+			'email-label'
+			'email'
+			'submit';
+		gap: 5px;
+	}
+	@media (max-width: 275px) {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
 `;
 
 const Title = styled.h2`
@@ -30,6 +50,15 @@ const Title = styled.h2`
 	grid-area: title;
 	justify-self: center;
 	margin-top: 15px;
+	@media (max-width: 470px) {
+		font-size: 1.8rem;
+		margin: 15px 10px 15px 10px;
+		justify-self: center;
+		text-align: center;
+	}
+	@media (max-width: 390px) {
+		font-size: 1.2rem;
+	}
 `;
 const Subtitle = styled.h3`
 	color: #d9b92e;
@@ -44,6 +73,13 @@ const NameLabel = styled.label`
 	font-size: 1.4rem;
 	align-self: center;
 	margin: 5px;
+	@media (max-width: 470px) {
+		justify-self: start;
+		margin: 0px 0px 0px 5px;
+	}
+	@media (max-width: 275px) {
+		margin-top: 2rem;
+	}
 `;
 const EmailLabel = styled.label`
 	color: #d9b92e;
@@ -52,16 +88,31 @@ const EmailLabel = styled.label`
 	align-self: center;
 	justify-self: end;
 	margin: 5px;
+	@media (max-width: 470px) {
+		justify-self: start;
+		margin: 0px 0px 0px 5px;
+	}
+	@media (max-width: 275px) {
+		margin-top: 1rem;
+	}
 `;
 
 const Name = styled.input`
 	grid-area: name;
 	margin: 10px 15px 5px 5px;
+	@media (max-width: 470px) {
+		margin: 0px 5px 0px 5px;
+		height: 2rem;
+	}
 `;
 
 const Email = styled.input`
 	grid-area: email;
 	margin: 10px 15px 5px 5px;
+	@media (max-width: 470px) {
+		margin: 0px 5px 0px 5px;
+		height: 2rem;
+	}
 `;
 
 const Submit = styled.input`
@@ -76,6 +127,13 @@ const Submit = styled.input`
 	cursor: pointer;
 	justify-self: start;
 	margin: 5px;
+	@media (max-width: 470px) {
+		width: auto;
+		justify-self: center;
+	}
+	@media (max-width: 275px) {
+		margin-top: 1rem;
+	}
 `;
 
 export default class Dashboard extends Component {

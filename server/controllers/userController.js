@@ -30,13 +30,11 @@ exports.validateRegister = (req, res, next) => {
 
 	const errors = req.validationErrors();
 	if (errors) {
-		console.log(
-			'error',
-			errors.map((err) => err.msg)
-		);
-		return;
+		const sendErrors = errors.map((err) => err.msg);
+		res.send(sendErrors);
+	} else {
+		next();
 	}
-	next();
 };
 
 exports.register = async (req, res, next) => {

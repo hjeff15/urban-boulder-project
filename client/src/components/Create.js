@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import FormError from './FormError';
 import styled from 'styled-components';
+//Components
+import Tooltip from './Tooltip';
 
 const Container = styled.div`
 	display: grid;
@@ -29,6 +31,9 @@ const FormContainer = styled.form`
 		margin: 1rem 1rem 1rem 1rem;
 		border-radius: 10px;
 		grid-auto-columns: minmax(230px, auto);
+	}
+	@media (max-width: 270px) {
+		margin: 2px;
 	}
 `;
 const Title = styled.h3`
@@ -145,6 +150,7 @@ const LatLng = styled.div`
 const LocationLabel = styled.label`
 	grid-area: title;
 	font-size: 1.3rem;
+	display: flex;
 	@media (max-width: 600px) {
 		font-size: 1rem;
 	}
@@ -469,7 +475,7 @@ export default class Create extends Component {
 					this.props.history.push(`/crag/${res.data.slug}`, {
 						msg: 'Crag successfully created!',
 					});
-					return res.data;
+					// return res.data;
 				})
 				.catch((err) => {
 					console.log(err);
@@ -491,6 +497,7 @@ export default class Create extends Component {
 				freeAllDay: false,
 				busyWeekend: false,
 				avoidRush: false,
+				// showLocationQ: false,
 			});
 		}
 	};
@@ -531,6 +538,7 @@ export default class Create extends Component {
 					<LatLng>
 						<LocationLabel htmlFor='location'>
 							Location:{' '}
+							<Tooltip text="The location needs to be in a Lat Lng format as it is more specific, and we don't want to put any private property on the site." />
 						</LocationLabel>
 						<LatTitle htmlFor='lat'>Latitude: </LatTitle>
 						<LatInput

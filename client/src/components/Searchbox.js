@@ -23,6 +23,9 @@ const SearchInput = styled.input`
 	height: 2rem;
 	border-color: transparent;
 	border-radius: 10px;
+	@media (max-width: 512px) {
+		height: 1.3rem;
+	}
 `;
 
 const SearchResult = styled.a`

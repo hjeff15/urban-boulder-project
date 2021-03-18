@@ -197,6 +197,15 @@ const NoCommentsYet = styled.h4`
 	justify-content: center;
 `;
 
+const SuccessMsg = styled.h2`
+	display: grid;
+	color: green;
+	justify-content: center;
+	background-color: #08304b;
+	margin: 0px;
+	padding-bottom: 0.5rem;
+`;
+
 class ShowCrag extends Component {
 	constructor() {
 		super();
@@ -245,7 +254,7 @@ class ShowCrag extends Component {
 	render() {
 		return (
 			<div>
-				{this.state.msg && <h2>{this.state.msg}</h2>}
+				{this.state.msg && <SuccessMsg>{this.state.msg}</SuccessMsg>}
 				{this.state.loaded && (
 					<ShowCragPage>
 						<CragTitleATag
