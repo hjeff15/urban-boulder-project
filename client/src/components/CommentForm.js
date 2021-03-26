@@ -1,11 +1,18 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { striptags } from 'striptags';
+// Components
+import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
+import { Handle } from './sliderComponents/Handle';
+import { Track } from './sliderComponents/Track';
+import { Tick } from './sliderComponents/Tick';
 
 const CommentFormDiv = styled.div`
 	grid-area: commentForm;
 	box-sizing: border-box;
 	display: grid;
+	grid-template-columns: minmax(220px, auto);
 	grid-template-rows: repeat(2, auto);
 	grid-template-areas:
 		'title'
@@ -17,6 +24,7 @@ const FormTitle = styled.p`
 	color: #d9b92e;
 	font-size: 1.5rem;
 	justify-self: center;
+	text-align: center;
 `;
 
 const Form = styled.form`
@@ -32,24 +40,45 @@ const Form = styled.form`
 
 const ReviewTextArea = styled.textarea`
 	grid-area: textArea;
+	@media (max-width: 270px) {
+		width: 85vw;
+		justify-self: center;
+	}
 `;
 
-const GradeContainer = styled.div`
-	grid-area: grades;
+const CommentAddedMsg = styled.p`
+	grid-area: title;
+	align-self: end;
 	justify-self: center;
-	margin: 1rem;
+	color: green;
+	background-color: lightgreen;
+	border: 1px green solid;
+	border-radius: 20px;
+	padding: 2px 4rem 2px 4rem;
+	margin: 1px;
+	@media (max-width: 300px) {
+		padding: 2px 1rem 2px 1rem;
+	}
 `;
 
-const GradeInput = styled.input`
-	display: none;
-`;
-
-const GradeLabel = styled.label`
-	cursor: pointer;
-	font-size: 1.2rem;
-	:hover {
-		color: #d9b92e;
-		font-size: 1.6rem;
+const RangeSlider = styled.div`
+	grid-area: grades;
+	display: grid;
+	grid-template-columns: repeat(4, 25%);
+	grid-template-areas: 'slider slider slider slider';
+	margin-right: 3rem;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	font-size: 1rem;
+	@media (max-width: 750px) {
+		grid-template-columns: repeat(3, auto);
+		grid-template-areas: 'slider slider slider';
+		margin-left: 2rem;
+		margin-right: 2rem;
+	}
+	@media (max-width: 412px) {
+		margin-left: 0.5rem;
+		margin-right: 1rem;
 	}
 `;
 
@@ -65,7 +94,18 @@ const SubmitButton = styled.button`
 	font-size: 1.2rem;
 	cursor: pointer;
 	margin-top: 10px;
+	@media (max-width: 270px) {
+		/* justify-self: start; */
+		width: 90vw;
+	}
 `;
+
+const sliderStyle = {
+	position: 'relative',
+	width: 'auto',
+	height: 80,
+	gridArea: 'slider',
+};
 
 const grades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
@@ -75,6 +115,8 @@ class CommentForm extends Component {
 		this.state = {
 			text: '',
 			difficulty: '',
+			dummyDifficulty: 6,
+			commentAddedMsg: false,
 		};
 	}
 
@@ -83,10 +125,9 @@ class CommentForm extends Component {
 		const user = this.props.user;
 		const review = {
 			author: user,
-			text: this.state.text,
-			difficulty: this.state.difficulty,
+			text: striptags(this.state.text),
+			difficulty: striptags(this.state.difficulty),
 		};
-
 		const response = await axios
 			.post(
 				`http://localhost:4000/comments/${this.props.cragInfo.data._id}`,
@@ -97,17 +138,14 @@ class CommentForm extends Component {
 			)
 			.then((res) => {
 				console.log(res);
+				this.setState({
+					commentAddedMsg: true,
+				});
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 		return response;
-	};
-
-	handleClick = (e) => {
-		this.setState({
-			difficulty: e.target.value,
-		});
 	};
 
 	handleTextChange = (e) => {
@@ -116,10 +154,19 @@ class CommentForm extends Component {
 		});
 	};
 
+	changeSliderValues = (values) => {
+		this.setState({
+			difficulty: `v${values[0]}`,
+		});
+	};
+
 	render() {
 		return (
 			<CommentFormDiv>
 				<FormTitle>CRAG COMMENT FORM</FormTitle>
+				{this.state.commentAddedMsg && (
+					<CommentAddedMsg>Comment Added!</CommentAddedMsg>
+				)}
 				<Form onSubmit={this.submitForm}>
 					<ReviewTextArea
 						name='text'
@@ -129,27 +176,85 @@ class CommentForm extends Component {
 						required
 						onChange={this.handleTextChange}
 					/>
-					<GradeContainer>
-						{grades.map((grade, index) => {
-							return (
-								<GradeLabel
-									htmlFor={`v${grade}`}
-									key={index}
-									onClick={this.handleClick}
-								>
-									{' '}
-									{`v${grade}`}
-									<GradeInput
-										type='radio'
-										required
-										id={`v${grade}`}
-										name='difficulty'
-										value={`v${grade}`}
+					<RangeSlider>
+						<Slider
+							rootStyle={sliderStyle}
+							domain={[0, 16]}
+							step={1}
+							mode={2}
+							values={[this.state.dummyDifficulty]}
+							onChange={this.changeSliderValues}
+							required
+						>
+							<Rail>
+								{({ getRailProps }) => (
+									<div
+										style={{
+											position: 'absolute',
+											width: '100%',
+											height: 10,
+											marginTop: 35,
+											borderRadius: 5,
+											backgroundColor: 'white',
+										}}
+										{...getRailProps()}
 									/>
-								</GradeLabel>
-							);
-						})}
-					</GradeContainer>
+								)}
+							</Rail>
+							<Handles>
+								{({ handles, getHandleProps }) => {
+									return (
+										<div className='slider-handles'>
+											{handles.map((handle) => (
+												<Handle
+													key={handle.id}
+													handle={handle}
+													getHandleProps={
+														getHandleProps
+													}
+												/>
+											))}
+										</div>
+									);
+								}}
+							</Handles>
+							<Tracks left={false} right={false}>
+								{({ tracks, getTrackProps }) => (
+									<div className='slider-tracks'>
+										{tracks.map(
+											({ id, source, target }) => (
+												<Track
+													key={id}
+													source={source}
+													target={target}
+													getTrackProps={
+														getTrackProps
+													}
+												/>
+											)
+										)}
+									</div>
+								)}
+							</Tracks>
+							<Ticks
+								count={
+									15 /* generate approximately 15 ticks within the domain */
+								}
+							>
+								{({ ticks }) => (
+									<div className='slider-ticks'>
+										{ticks.map((tick) => (
+											<Tick
+												key={tick.id}
+												tick={tick}
+												count={ticks.length}
+											/>
+										))}
+									</div>
+								)}
+							</Ticks>
+						</Slider>
+					</RangeSlider>
 					<SubmitButton type='submit'>Sumbit</SubmitButton>
 				</Form>
 			</CommentFormDiv>

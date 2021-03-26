@@ -56,22 +56,43 @@ const CragDescription = styled.h4`
 	}
 `;
 
-const CragDifficulty = styled.h3`
+const CragDifficulty = styled.h4`
 	color: #d9b92e;
 	grid-area: diff;
 	justify-self: center;
-	font-size: 42px;
+	font-size: 1.5rem;
 	margin: 0px;
 	width: 80%;
 	height: 70px;
 	line-height: 70px;
 	text-align: center;
 	border: 1px solid #d9b92e;
+	@media (max-width: 1040px) {
+		font-size: 1.2rem;
+	}
+	@media (max-width: 840px) {
+		font-size: 1.1rem;
+	}
 	@media (max-width: 790px) {
-		font-size: 1.5rem;
+		font-size: 0.9rem;
 		width: 80%;
 		height: 40px;
 		line-height: 40px;
+	}
+	@media (max-width: 670px) {
+		font-size: 1.2rem;
+	}
+	@media (max-width: 545px) {
+		font-size: 0.9rem;
+	}
+	@media (max-width: 410px) {
+		font-size: 0.8rem;
+	}
+	@media (max-width: 400px) {
+		font-size: 1.1rem;
+	}
+	@media (max-width: 270px) {
+		font-size: 0.9rem;
 	}
 `;
 
@@ -184,7 +205,8 @@ export default class CragCard extends Component {
 								.join('') + '...'}
 				</CragDescription>
 				<CragDifficulty>
-					{this.props.cragInfo.difficulty}
+					V{this.props.cragInfo.minDifficulty} - V
+					{this.props.cragInfo.maxDifficulty}
 				</CragDifficulty>
 				<LikeButton onSubmit={this.submitLike}>
 					<button

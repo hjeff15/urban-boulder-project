@@ -20,6 +20,16 @@ const cragSchema = new mongoose.Schema(
 			type: String,
 			required: 'Please let us know the overall grade for the crag',
 		},
+		minDifficulty: {
+			type: Number,
+			required:
+				'Please let us know the overall minimum difficulty for the crag',
+		},
+		maxDifficulty: {
+			type: Number,
+			required:
+				'Please let us know the overall maximum difficulty for the crag',
+		},
 		freeAllDay: {
 			type: Boolean,
 		},

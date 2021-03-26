@@ -1,10 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
-// const Container = styled.div`
-// 	display: grid;
-// `;
+import { striptags } from 'striptags';
 
 const ContainerForm = styled.form`
 	display: grid;
@@ -221,12 +218,11 @@ export default class Register extends Component {
 
 	onSubmit = async (e) => {
 		e.preventDefault();
-
 		const newUser = {
-			name: this.state.name,
-			email: this.state.email,
-			password: this.state.password,
-			passwordConfirm: this.state.passwordConfirm,
+			name: striptags(this.state.name),
+			email: striptags(this.state.email),
+			password: striptags(this.state.password),
+			passwordConfirm: striptags(this.state.passwordConfirm),
 		};
 		axios
 			.post('http://localhost:4000/register', newUser)
@@ -325,7 +321,6 @@ export default class Register extends Component {
 
 					<Submit type='submit' value='Register' />
 				</ContainerForm>
-				{/* <button onClick={this.logout}>Logout</button> */}
 			</div>
 		);
 	}

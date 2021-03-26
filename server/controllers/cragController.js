@@ -173,7 +173,7 @@ exports.mapCrags = async (req, res) => {
 	};
 
 	const crags = await Crag.find(q).select(
-		'cragName location difficulty photo slug'
+		'cragName location difficulty photo slug minDifficulty maxDifficulty'
 	);
 	res.send(crags);
 };

@@ -37,22 +37,22 @@ const Title = styled.h1`
 	}
 `;
 
-const Navigators = styled.a`
-	color: #d9b92e;
-	font-size: 1.7rem;
-	text-decoration: none;
-	justify-self: center;
-	align-self: center;
-	&:hover {
-		text-decoration: underline;
-	}
-	@media (max-width: 790px) {
-		font-size: 1.3rem;
-	}
-	@media (max-width: 512px) {
-		display: none;
-	}
-`;
+// const Navigators = styled.a`
+// 	color: #d9b92e;
+// 	font-size: 1.7rem;
+// 	text-decoration: none;
+// 	justify-self: center;
+// 	align-self: center;
+// 	&:hover {
+// 		text-decoration: underline;
+// 	}
+// 	@media (max-width: 790px) {
+// 		font-size: 1.3rem;
+// 	}
+// 	@media (max-width: 512px) {
+// 		display: none;
+// 	}
+// `;
 
 const Logout = styled.p`
 	color: #d9b92e;

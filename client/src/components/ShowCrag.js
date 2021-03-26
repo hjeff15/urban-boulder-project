@@ -13,30 +13,33 @@ const ShowCragPage = styled.div`
 	color: white;
 	box-sizing: border-box;
 	display: grid;
-	grid-template-columns: repeat(3, minmax(auto, 270px)) minmax(200px, 500px) 10vw;
+	grid-template-columns: repeat(3, minmax(auto, 270px)) minmax(200px, 500px) repeat(
+			2,
+			10vw
+		);
 	grid-template-rows:
 		4rem 4rem max-content minmax(30px, auto)
 		auto;
 	grid-template-areas:
-		' img img img title edit'
-		' img img img likes diff'
-		' img img img desc desc'
-		' map map map map map'
-		' comments comments comments comments comments'
-		' . commentForm commentForm commentForm .';
+		' img img img title title edit'
+		' img img img likes diff diff'
+		' img img img desc desc desc'
+		' map map map map map map'
+		' comments comments comments comments comments comments'
+		' . commentForm commentForm commentForm commentForm .';
 	@media (max-width: 900px) {
 		grid-template-columns:
-			10vw repeat(4, auto)
+			10vw repeat(4, auto) minmax(15vw, 20vw)
 			10vw;
 		grid-template-rows: repeat(3, auto) minmax(30px, auto) repeat(3, auto);
 		grid-template-areas:
-			' . title edit likes diff .'
-			' . img img img img .'
-			' . img img img img .'
-			' . map map map map .'
-			' . desc desc desc desc .'
-			' . comments comments comments comments .'
-			' . commentForm commentForm commentForm commentForm .';
+			' . title edit likes diff diff .'
+			' . img img img img img .'
+			' . img img img img img .'
+			' . map map map map map .'
+			' . desc desc desc desc desc .'
+			' . comments comments comments comments comments .'
+			' . commentForm commentForm commentForm commentForm commentForm .';
 	}
 	@media (max-width: 512px) {
 		grid-template-columns: 5vw repeat(4, auto) 5vw;
@@ -50,6 +53,19 @@ const ShowCragPage = styled.div`
 			' . desc desc desc desc .'
 			' . comments comments comments comments .'
 			' . commentForm commentForm commentForm commentForm .';
+	}
+	@media (max-width: 270px) {
+		grid-template-columns: repeat(4, auto);
+		grid-template-rows: repeat(4, auto) minmax(30px, auto) repeat(3, auto);
+		grid-template-areas:
+			'title title title edit'
+			'diff diff likes likes'
+			'img img img img'
+			'img img img img'
+			'map map map map'
+			'desc desc desc desc'
+			'comments comments comments comments'
+			'commentForm commentForm commentForm commentForm';
 	}
 `;
 
@@ -98,6 +114,10 @@ const EditButton = styled.a`
 	@media (max-width: 512px) {
 		justify-self: end;
 	}
+	@media (max-width: 270px) {
+		margin-right: 5px;
+		margin-top: 5px;
+	}
 `;
 
 const CragImage = styled.img`
@@ -117,18 +137,22 @@ const CragImage = styled.img`
 const CragDiff = styled.p`
 	grid-area: diff;
 	color: #d9b92e;
-	font-size: 3rem;
+	font-size: 2rem;
 	width: 90%;
 	text-align: center;
 	border: 1px solid #d9b92e;
 	justify-self: start;
 	align-self: center;
 	@media (max-width: 900px) {
-		font-size: 2rem;
+		font-size: 1.7rem;
 		justify-self: end;
 		margin: 0px;
 	}
+	@media (max-width: 540px) {
+		font-size: 1.5rem;
+	}
 	@media (max-width: 512px) {
+		font-size: 1.7rem;
 		justify-self: start;
 	}
 `;
@@ -170,11 +194,20 @@ const CragDescText = styled.p`
 	@media (max-width: 900px) {
 		font-size: 1.5rem;
 	}
+	@media (max-width: 400px) {
+		font-size: 1.3rem;
+	}
+	@media (max-width: 400px) {
+		font-size: 1.1rem;
+	}
 `;
 
 const CragIcons = styled.p`
 	grid-area: desc;
 	color: orange;
+	@media (max-width: 300px) {
+		text-align: center;
+	}
 `;
 
 const CommentBoxGrid = styled.div`
@@ -224,6 +257,13 @@ class ShowCrag extends Component {
 	componentDidUpdate(prevProp, prevState) {
 		if (this.props.location.pathname !== prevProp.location.pathname) {
 			this.fetchData();
+			console.log('component has been updated');
+		}
+		if (
+			this.props.location.pathname.state !==
+			prevProp.location.pathname.state
+		) {
+			console.log('component has been updated');
 		}
 	}
 
@@ -325,7 +365,10 @@ class ShowCrag extends Component {
 							</CragLikes>
 						)}
 						{/* </CragLikes> */}
-						<CragDiff>{this.state.crag.data.difficulty}</CragDiff>
+						<CragDiff>
+							v{this.state.crag.data.minDifficulty} - v
+							{this.state.crag.data.maxDifficulty}
+						</CragDiff>
 						<CragDesc>
 							<CragDescText>
 								{this.state.crag.data.cragDescription}

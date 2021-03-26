@@ -51,7 +51,7 @@ const AuthorTime = styled.p`
 const CommentText = styled.p`
 	font-size: 1.4em;
 	grid-area: review;
-	margin: auto auto 10px 10px;
+	margin: auto 10px 10px 10px;
 	@media (max-width: 512px) {
 		font-size: 0.9em;
 	}

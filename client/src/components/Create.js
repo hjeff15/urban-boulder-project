@@ -3,7 +3,12 @@ import axios from 'axios';
 import FormError from './FormError';
 import styled from 'styled-components';
 //Components
+import { striptags } from 'striptags';
+import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
 import Tooltip from './Tooltip';
+import { Handle } from './sliderComponents/Handle';
+import { Track } from './sliderComponents/Track';
+import { Tick } from './sliderComponents/Tick';
 
 const Container = styled.div`
 	display: grid;
@@ -12,7 +17,7 @@ const Container = styled.div`
 const FormContainer = styled.form`
 	display: grid;
 	background-color: #08304b;
-	grid-template-rows: repeat(10, auto);
+	grid-template-rows: repeat(11, auto);
 	grid-template-areas:
 		'title'
 		'name'
@@ -20,6 +25,7 @@ const FormContainer = styled.form`
 		'lat-lng'
 		'photo'
 		'difficulty'
+		'newDifficulty'
 		'option1'
 		'option2'
 		'option3'
@@ -251,6 +257,34 @@ const DifficultySelect = styled.select`
 	}
 `;
 
+const RangeSlider = styled.div`
+	grid-area: newDifficulty;
+	display: grid;
+	grid-template-columns: repeat(4, 25%);
+	grid-template-areas: '. slider slider slider';
+	margin-right: 3rem;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	font-size: 1rem;
+	@media (max-width: 750px) {
+		grid-template-columns: repeat(3, auto);
+		grid-template-areas: 'slider slider slider';
+		margin-left: 2rem;
+		margin-right: 2rem;
+	}
+	@media (max-width: 412px) {
+		margin-left: 0.5rem;
+		margin-right: 1rem;
+	}
+`;
+
+const sliderStyle = {
+	position: 'relative',
+	width: 'auto',
+	height: 80,
+	gridArea: 'slider',
+};
+
 const Option1 = styled.div`
 	grid-area: option1;
 	display: grid;
@@ -340,6 +374,7 @@ const CreateBtn = styled.input`
 	height: 2rem;
 	font-size: 1.2rem;
 	margin: 1rem;
+	cursor: pointer;
 	@media (max-width: 430px) {
 		width: auto;
 	}
@@ -361,6 +396,8 @@ export default class Create extends Component {
 			freeAllDay: false,
 			busyWeekend: false,
 			avoidRush: false,
+			minDifficulty: 2,
+			maxDifficulty: 9,
 			formError: false,
 		};
 	}
@@ -371,6 +408,8 @@ export default class Create extends Component {
 				cragName: this.props.cragCardInfo.data.cragName,
 				cragDescription: this.props.cragCardInfo.data.cragDescription,
 				difficulty: this.props.cragCardInfo.data.difficulty,
+				minDifficulty: this.props.cragCardInfo.data.minDifficulty,
+				maxDifficulty: this.props.cragCardInfo.data.maxDifficulty,
 				location: {
 					coordinates: this.props.cragCardInfo.data.location
 						.coordinates,
@@ -446,14 +485,26 @@ export default class Create extends Component {
 		}
 	};
 
+	changeSliderValues = (values) => {
+		this.setState({
+			minDifficulty: values[0],
+			maxDifficulty: values[1],
+		});
+	};
+
 	onSubmit = (e) => {
 		e.preventDefault();
 
 		const photoData = new FormData();
 		photoData.append('photo', this.state.photo);
-		photoData.append('cragName', this.state.cragName);
-		photoData.append('cragDescription', this.state.cragDescription);
+		photoData.append('cragName', striptags(this.state.cragName));
+		photoData.append(
+			'cragDescription',
+			striptags(this.state.cragDescription)
+		);
 		photoData.append('difficulty', this.state.difficulty);
+		photoData.append('minDifficulty', this.state.minDifficulty);
+		photoData.append('maxDifficulty', this.state.maxDifficulty);
 		photoData.append(
 			'location[coordinates]',
 			this.state.location.coordinates
@@ -483,11 +534,12 @@ export default class Create extends Component {
 						formError: true,
 					});
 				});
-
 			this.setState({
 				cragName: '',
 				cragDescription: '',
 				difficulty: '',
+				minDifficulty: 2,
+				maxDifficulty: 9,
 				location: {
 					coordinates: [],
 				},
@@ -497,7 +549,6 @@ export default class Create extends Component {
 				freeAllDay: false,
 				busyWeekend: false,
 				avoidRush: false,
-				// showLocationQ: false,
 			});
 		}
 	};
@@ -510,7 +561,11 @@ export default class Create extends Component {
 					formEncType='multipart/form-data'
 					onSubmit={this.onSubmit}
 				>
-					<Title>New Crag</Title>
+					{this.props.cragCardInfo ? (
+						<Title>Edit Crag</Title>
+					) : (
+						<Title>New Crag</Title>
+					)}
 					<Name>
 						<NameLabel>Crag Name: </NameLabel>
 						<NameInput
@@ -619,6 +674,88 @@ export default class Create extends Component {
 							<option>V16</option>
 						</DifficultySelect>
 					</Difficulty>
+					<RangeSlider>
+						<Slider
+							rootStyle={sliderStyle}
+							domain={[0, 16]}
+							step={1}
+							mode={2}
+							values={[
+								this.state.minDifficulty,
+								this.state.maxDifficulty,
+							]}
+							onChange={this.changeSliderValues}
+							required
+						>
+							<Rail>
+								{({ getRailProps }) => (
+									<div
+										style={{
+											position: 'absolute',
+											width: '100%',
+											height: 10,
+											marginTop: 35,
+											borderRadius: 5,
+											backgroundColor: 'white',
+										}}
+										{...getRailProps()}
+									/>
+								)}
+							</Rail>
+							<Handles>
+								{({ handles, getHandleProps }) => {
+									return (
+										<div className='slider-handles'>
+											{handles.map((handle) => (
+												<Handle
+													key={handle.id}
+													handle={handle}
+													getHandleProps={
+														getHandleProps
+													}
+												/>
+											))}
+										</div>
+									);
+								}}
+							</Handles>
+							<Tracks left={false} right={false}>
+								{({ tracks, getTrackProps }) => (
+									<div className='slider-tracks'>
+										{tracks.map(
+											({ id, source, target }) => (
+												<Track
+													key={id}
+													source={source}
+													target={target}
+													getTrackProps={
+														getTrackProps
+													}
+												/>
+											)
+										)}
+									</div>
+								)}
+							</Tracks>
+							<Ticks
+								count={
+									15 /* generate approximately 15 ticks within the domain */
+								}
+							>
+								{({ ticks }) => (
+									<div className='slider-ticks'>
+										{ticks.map((tick) => (
+											<Tick
+												key={tick.id}
+												tick={tick}
+												count={ticks.length}
+											/>
+										))}
+									</div>
+								)}
+							</Ticks>
+						</Slider>
+					</RangeSlider>
 
 					{/* </div> */}
 					<Option1>

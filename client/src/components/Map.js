@@ -78,6 +78,7 @@ const InfoWindowGrid = styled.div`
 	grid-template-columns: auto;
 	justify-items: center;
 	background-color: #08304b;
+	width: 165px;
 `;
 
 const InfoWindowTitle = styled.a`
@@ -126,6 +127,7 @@ export default function Map() {
 				`http://localhost:4000/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${radius}`
 			)
 			.then((res) => {
+				console.log(res.data);
 				setCrags(res.data);
 				setLoaded(true);
 			})
@@ -238,7 +240,8 @@ export default function Map() {
 								alt='cragImage'
 							/>
 							<InfoWindowDiff>
-								{selected.difficulty}
+								v{selected.minDifficulty} - v
+								{selected.maxDifficulty}
 							</InfoWindowDiff>
 						</InfoWindowGrid>
 					</InfoWindow>
