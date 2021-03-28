@@ -18,11 +18,13 @@ TO DO LIST
 
 <!-- 6. Add res msg from comment to 'Comment added' box above Comment box. -->
 
-7. Pagination
- <!-- 11. Add Tooltip to lat and lng (why we ask for this...) -->
-8. Add React-helmet or see other way to engage SEO
-9. Change MailTrap to MailChimp or other...
-10. What the hell is happening after creating new crag?? (showCrag seems to rerender?.....)
+<!-- 7. Pagination -->
+<!-- 11. Add Tooltip to lat and lng (why we ask for this...) -->
+
+<!-- 7. Load ALL crags on loading the Map component. -->
+
+<!-- 8. Add React-helmet or see other way to engage SEO -->
+ <!-- 9. Change MailTrap to MailChimp or other... -->
 
 <!-- ************** DEPLOY *************** -->
 

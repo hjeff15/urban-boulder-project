@@ -3,15 +3,16 @@
 variables.env
 
 # SERVER
-server/node_modules
+server/node_modules/
 server/variables.env
+server/sendgrid.env
 
 # CLIENT
 client/node_modules
 client/public/images
 
 # dependencies
-client/node_modules
+client/node_modules/
 client/.pnp
 client/.pnp.js
 
@@ -32,4 +33,4 @@ client/.env
 
 client/npm-debug.log*
 client/yarn-debug.log*
-client/yarn-error.log*
+client/yarn-error.log*sendgrid.env

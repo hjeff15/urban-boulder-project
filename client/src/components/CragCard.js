@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import PicPlaceholder from '../assets/images/crack.jpeg';
 import styled from 'styled-components';
 import { IoThumbsUp, IoThumbsUpOutline } from 'react-icons/io5';
@@ -24,6 +25,7 @@ const CragCardStyle = styled.div`
 
 const CardTitle = styled.h2`
 	color: white;
+	font-size: 1.3rem;
 	text-decoration: none;
 	border: 1px solid #d9b92e;
 	border-radius: 20px;
@@ -34,12 +36,14 @@ const CardTitle = styled.h2`
 	}
 `;
 
-const CardATag = styled.a`
+const CardATag = styled.p`
 	color: white;
 	text-decoration: none;
 	padding-left: 1rem;
 	padding-right: 1rem;
 	cursor: pointer;
+	margin-top: 5px;
+	margin-bottom: 5px;
 	&:hover {
 		color: #d9b92e;
 	}
@@ -47,6 +51,7 @@ const CardATag = styled.a`
 
 const CragDescription = styled.h4`
 	color: white;
+	font-weight: normal;
 	grid-area: desc;
 	padding-left: 1rem;
 	margin-top: 0.5rem;
@@ -60,39 +65,39 @@ const CragDifficulty = styled.h4`
 	color: #d9b92e;
 	grid-area: diff;
 	justify-self: center;
-	font-size: 1.5rem;
+	font-size: 1.1rem;
 	margin: 0px;
 	width: 80%;
 	height: 70px;
 	line-height: 70px;
 	text-align: center;
 	border: 1px solid #d9b92e;
-	@media (max-width: 1040px) {
-		font-size: 1.2rem;
+	@media (max-width: 960px) {
+		font-size: 1rem;
 	}
-	@media (max-width: 840px) {
-		font-size: 1.1rem;
-	}
-	@media (max-width: 790px) {
-		font-size: 0.9rem;
+	@media (max-width: 805px) {
+		font-size: 0.8rem;
 		width: 80%;
 		height: 40px;
 		line-height: 40px;
 	}
 	@media (max-width: 670px) {
-		font-size: 1.2rem;
+		font-size: 1rem;
 	}
 	@media (max-width: 545px) {
-		font-size: 0.9rem;
+		font-size: 0.7rem;
 	}
-	@media (max-width: 410px) {
-		font-size: 0.8rem;
+	@media (max-width: 414px) {
+		font-size: 0.6rem;
 	}
 	@media (max-width: 400px) {
-		font-size: 1.1rem;
+		font-size: 1rem;
 	}
-	@media (max-width: 270px) {
+	@media (max-width: 280px) {
 		font-size: 0.9rem;
+	}
+	@media (max-width: 260px) {
+		font-size: 0.7rem;
 	}
 `;
 
@@ -123,7 +128,7 @@ const LikeNumber = styled.p`
 	border-radius: 50%;
 `;
 
-export default class CragCard extends Component {
+class CragCard extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -165,7 +170,13 @@ export default class CragCard extends Component {
 		return (
 			<CragCardStyle>
 				<CardTitle>
-					<CardATag href={`/crag/${this.props.cragInfo.slug}`}>
+					<CardATag
+						onClick={() => {
+							this.props.history.push(
+								`/crag/${this.props.cragInfo.slug}`
+							);
+						}}
+					>
 						{this.props.cragInfo.cragName.split('').length < 12
 							? this.props.cragInfo.cragName.toUpperCase()
 							: this.props.cragInfo.cragName
@@ -243,3 +254,5 @@ export default class CragCard extends Component {
 		);
 	}
 }
+
+export default withRouter(CragCard);

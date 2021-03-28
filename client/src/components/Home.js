@@ -8,30 +8,40 @@ import Footer from './Footer';
 
 // Components
 import CragCard from './CragCard';
+import { PagesNav } from './PagesNav';
 
 const HomeDiv = styled.div`
 	background-color: #08304b;
 	display: grid;
 	margin: 0px;
 	justify-items: center;
+	height: 100vh;
+	@media (max-width: 670px) {
+		height: auto;
+	}
 `;
 
 const CragCardList = styled.ul`
 	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: repeat(3, 32vw);
-	grid-template-rows: auto;
+	grid-template-rows: minmax(auto, 305px);
 	grid-gap: 10px;
 	/* margin: 15px; */
 	margin: 0px;
 	padding-left: 5px;
+	@media (max-width: 790px) {
+		grid-template-rows: minmax(auto, 285px);
+	}
 	@media (max-width: 670px) {
 		grid-template-columns: repeat(2, 49vw);
+		grid-template-rows: minmax(auto, 265px);
 		padding-left: 0px;
 		grid-gap: 3px;
 	}
 	@media (max-width: 400px) {
 		grid-template-columns: auto;
+		grid-template-rows: minmax(auto, 275px);
 		padding: 10px;
 		grid-gap: 10px;
 	}
@@ -41,6 +51,7 @@ const ListItem = styled.li`
 	list-style: none;
 	border: 1px solid #d9b92e;
 	border-radius: 10px;
+	/* align-self: center; */
 `;
 
 const Msg = styled.h4`
@@ -82,6 +93,9 @@ export default class Home extends Component {
 			user: {},
 			msg: '',
 			welcomeMsg: '',
+			page: null,
+			pages: null,
+			count: null,
 		};
 	}
 
@@ -123,9 +137,16 @@ export default class Home extends Component {
 
 	async fetchData() {
 		const response = await axios
-			.get('http://localhost:4000/')
+			.get(`http://localhost:4000${this.props.location.pathname}`)
 			.then((result) => {
-				this.setState({ crags: result, loaded: true });
+				console.log(result.data);
+				this.setState({
+					crags: result.data.crags,
+					loaded: true,
+					page: result.data.page,
+					pages: result.data.pages,
+					count: result.data.count,
+				});
 			})
 			.catch(function (error) {
 				// handle error
@@ -166,27 +187,27 @@ export default class Home extends Component {
 				)}
 				{this.state.loaded && (
 					<CragCardList className='crag-cards'>
-						{Object.keys(this.state.crags.data).map(
-							(key, index) => (
-								<ListItem key={index}>
-									<CragCard
-										cragInfo={this.state.crags.data[key]}
-										user={
-											this.props.user
-												? this.props.user
-												: null
-										}
-										addMsg={this.addMsg}
-										updateLikes={this.props.updateLikes}
-									>
-										Crag Name:{' '}
-										{this.state.crags.data[key].cragName}
-									</CragCard>
-								</ListItem>
-							)
-						)}
+						{Object.keys(this.state.crags).map((key, index) => (
+							<ListItem key={index}>
+								<CragCard
+									cragInfo={this.state.crags[key]}
+									user={
+										this.props.user ? this.props.user : null
+									}
+									addMsg={this.addMsg}
+									updateLikes={this.props.updateLikes}
+								>
+									Crag Name: {this.state.crags[key].cragName}
+								</CragCard>
+							</ListItem>
+						))}
 					</CragCardList>
 				)}
+				<PagesNav
+					page={this.state.page}
+					pages={this.state.pages}
+					count={this.state.count}
+				></PagesNav>
 				<Footer />
 			</HomeDiv>
 		);

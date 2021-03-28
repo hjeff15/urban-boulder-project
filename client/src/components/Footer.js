@@ -5,6 +5,7 @@ const Title = styled.p`
 	color: white;
 	justify-self: center;
 	font-size: 1.2rem;
+	margin-top: 0px;
 	@media (max-width: 512px) {
 		font-size: 0.9rem;
 		text-align: center;

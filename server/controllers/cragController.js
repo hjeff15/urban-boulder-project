@@ -68,10 +68,25 @@ exports.createCrag = async (req, res) => {
 };
 
 exports.getCrags = async (req, res) => {
+	const page = req.params.page || 1;
+	const limit = 6;
+	const skip = page * limit - limit;
 	// Query the database for all crags, and organise by the most recently created (this includes updates at the moment)
-	const crags = await Crag.find().sort({ created: -1 });
-	// console.log(crags);
-	res.send(crags);
+	const cragsPromise = Crag.find()
+		.skip(skip)
+		.limit(limit)
+		.sort({ created: -1 });
+	const countPromise = Crag.countDocuments();
+	const [crags, count] = await Promise.all([cragsPromise, countPromise]);
+	const pages = Math.ceil(count / limit);
+	const data = {
+		crags: crags,
+		page: page,
+		pages: pages,
+		count: count,
+	};
+	console.log(data);
+	res.send(data);
 };
 
 exports.editCrag = async (req, res) => {

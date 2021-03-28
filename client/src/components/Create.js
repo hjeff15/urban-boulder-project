@@ -226,36 +226,36 @@ const PhotoLoaded = styled.img`
 	width: 20vw;
 `;
 
-const Difficulty = styled.div`
-	grid-area: difficulty;
-	display: grid;
-	grid-template-columns: repeat(4, 25%);
-	color: #d9b92e;
-	margin-bottom: 0.3rem;
-	@media (max-width: 740px) {
-		margin-left: 1rem;
-	}
-	@media (max-width: 600px) {
-		font-size: 1rem;
-		margin-bottom: 10px;
-	}
-`;
-const DifficultyLabel = styled.label`
-	grid-column: 2;
-	font-size: 1.3rem;
-	@media (max-width: 740px) {
-		grid-column: 1;
-	}
-	@media (max-width: 600px) {
-		font-size: 1rem;
-	}
-`;
+// const Difficulty = styled.div`
+// 	grid-area: difficulty;
+// 	display: grid;
+// 	grid-template-columns: repeat(4, 25%);
+// 	color: #d9b92e;
+// 	margin-bottom: 0.3rem;
+// 	@media (max-width: 740px) {
+// 		margin-left: 1rem;
+// 	}
+// 	@media (max-width: 600px) {
+// 		font-size: 1rem;
+// 		margin-bottom: 10px;
+// 	}
+// `;
+// const DifficultyLabel = styled.label`
+// 	grid-column: 2;
+// 	font-size: 1.3rem;
+// 	@media (max-width: 740px) {
+// 		grid-column: 1;
+// 	}
+// 	@media (max-width: 600px) {
+// 		font-size: 1rem;
+// 	}
+// `;
 
-const DifficultySelect = styled.select`
-	@media (max-width: 430px) {
-		grid-column: 3;
-	}
-`;
+// const DifficultySelect = styled.select`
+// 	@media (max-width: 430px) {
+// 		grid-column: 3;
+// 	}
+// `;
 
 const RangeSlider = styled.div`
 	grid-area: newDifficulty;
@@ -386,7 +386,7 @@ export default class Create extends Component {
 		this.state = {
 			cragName: '',
 			cragDescription: '',
-			difficulty: '',
+			// difficulty: '',
 			location: {
 				coordinates: [],
 			},
@@ -407,7 +407,7 @@ export default class Create extends Component {
 			this.setState({
 				cragName: this.props.cragCardInfo.data.cragName,
 				cragDescription: this.props.cragCardInfo.data.cragDescription,
-				difficulty: this.props.cragCardInfo.data.difficulty,
+				// difficulty: this.props.cragCardInfo.data.difficulty,
 				minDifficulty: this.props.cragCardInfo.data.minDifficulty,
 				maxDifficulty: this.props.cragCardInfo.data.maxDifficulty,
 				location: {
@@ -502,7 +502,7 @@ export default class Create extends Component {
 			'cragDescription',
 			striptags(this.state.cragDescription)
 		);
-		photoData.append('difficulty', this.state.difficulty);
+		// photoData.append('difficulty', this.state.difficulty);
 		photoData.append('minDifficulty', this.state.minDifficulty);
 		photoData.append('maxDifficulty', this.state.maxDifficulty);
 		photoData.append(
@@ -537,7 +537,7 @@ export default class Create extends Component {
 			this.setState({
 				cragName: '',
 				cragDescription: '',
-				difficulty: '',
+				// difficulty: '',
 				minDifficulty: 2,
 				maxDifficulty: 9,
 				location: {
@@ -644,7 +644,7 @@ export default class Create extends Component {
 							/>
 						)}
 					</Photo>
-					<Difficulty>
+					{/* <Difficulty>
 						<DifficultyLabel htmlFor='difficulty'>
 							Difficulty:{' '}
 						</DifficultyLabel>
@@ -673,7 +673,7 @@ export default class Create extends Component {
 							<option>V15</option>
 							<option>V16</option>
 						</DifficultySelect>
-					</Difficulty>
+					</Difficulty> */}
 					<RangeSlider>
 						<Slider
 							rootStyle={sliderStyle}

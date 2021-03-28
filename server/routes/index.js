@@ -8,7 +8,7 @@ const { catchErrors } = require('../handlers/errorHandlers');
 
 // Do work here
 router.get('/', catchErrors(cragController.getCrags));
-router.get('/crags', catchErrors(cragController.getCrags));
+router.get('/pages/:page', catchErrors(cragController.getCrags));
 router.get('/crag/:slug', catchErrors(cragController.getCragBySlug));
 
 router.get('/createCrag', catchErrors(cragController.addCrag));

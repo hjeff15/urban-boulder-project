@@ -143,6 +143,17 @@ class App extends Component {
 							/>
 						)}
 					/>
+					<Route
+						path='/pages/:page'
+						exact
+						render={(props) => (
+							<Home
+								{...props}
+								user={user}
+								updateLikes={this.updateLikes}
+							/>
+						)}
+					/>
 					<Route path='/about' component={About} />
 					<ProtectedRoute
 						path='/create'

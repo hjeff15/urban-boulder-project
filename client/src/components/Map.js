@@ -29,15 +29,6 @@ const containerStyle = {
 	height: '76vh',
 };
 
-// position: relative;
-// top: 5rem;
-// transform: translateX(40%);
-// z-index: 10;
-// display: grid;
-// grid-template-columns: 90% 10%;
-// grid-template-rows: 5rem;
-// grid-template-areas: 'search user-locate';
-
 const SearchBoxStyle = styled.div`
 	position: absolute;
 	display: grid;
@@ -45,14 +36,17 @@ const SearchBoxStyle = styled.div`
 	height: 2rem;
 	width: 45vw;
 	z-index: 10;
-	grid-template-columns: auto 3rem;
-	grid-template-areas: 'search button';
+	grid-template-columns: auto 3.5rem 3rem;
+	grid-template-areas: 'search dropdown button';
 	@media (max-width: 512px) {
-		grid-template-columns: 85vw 15vw;
+		grid-template-columns: 70vw 15vw 15vw;
 		margin-top: 20px;
 		margin-left: 0px;
 		width: auto;
 		left: 0;
+	}
+	@media (max-width: 360px) {
+		grid-template-columns: 65vw 20vw 15vw;
 	}
 `;
 
@@ -73,9 +67,25 @@ const GetLocationButton = styled.button`
 	grid-area: button;
 `;
 
+const RadiusSelect = styled.select`
+	grid-area: dropdown;
+	font-size: 0.7rem;
+	font-weight: bold;
+	padding-left: 5px;
+	color: #d9b92e;
+	background-color: #08304b;
+	@media (max-width: 270px) {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		text-indent: 1px;
+		text-overflow: '';
+	}
+`;
+
 const InfoWindowGrid = styled.div`
 	display: grid;
 	grid-template-columns: auto;
+	grid-template-rows: auto;
 	justify-items: center;
 	background-color: #08304b;
 	width: 165px;
@@ -96,8 +106,11 @@ const InfoWindowDiff = styled.h3`
 `;
 const InfoWindowImg = styled.img`
 	border-radius: 10px;
-	margin-left: 0.5rem;
-	margin-right: 0.5rem;
+	object-fit: contain;
+	width: 100%;
+	max-height: 10rem;
+	justify-self: stretch;
+	max-width: 160px;
 `;
 
 const center = {
@@ -105,7 +118,7 @@ const center = {
 	lng: -0.11610419428800553,
 };
 
-const radius = 10 * 1000; //km (I think...) could change dynamically???
+const radius = 5000; //km (I think...) could change dynamically???
 // const zoomLevel = 14;
 
 const options = {
@@ -114,17 +127,17 @@ const options = {
 	fullscreenControl: false,
 };
 
-const libraries = ['places'];
-
 export default function Map() {
 	const [crags, setCrags] = useState([]);
 	const [loaded, setLoaded] = useState(false);
 	const [selected, setSelected] = useState(null);
+	const [userRadius, setUserRadius] = useState(radius);
+	const [libraries] = useState(['places']);
 
 	useEffect(() => {
 		const response = axios
 			.get(
-				`http://localhost:4000/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${radius}`
+				`http://localhost:4000/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${userRadius}`
 			)
 			.then((res) => {
 				console.log(res.data);
@@ -135,7 +148,7 @@ export default function Map() {
 				console.log(err);
 			});
 		return response;
-	}, []);
+	}, [userRadius]);
 
 	const { isLoaded, loadError } = useLoadScript({
 		googleMapsApiKey: process.env.REACT_APP_MAP_KEY,
@@ -153,7 +166,7 @@ export default function Map() {
 		// Get a new location to query API
 		const response = await axios
 			.get(
-				`http://localhost:4000/api/crags/near?lat=${lat}&lng=${lng}&radius=${radius}`
+				`http://localhost:4000/api/crags/near?lat=${lat}&lng=${lng}&radius=${userRadius}`
 			)
 			.then((res) => {
 				setCrags(res.data);
@@ -195,7 +208,7 @@ export default function Map() {
 					}}
 				/>
 			)}
-			<Search panTo={panTo} />
+			<Search panTo={panTo} setUserRadius={setUserRadius} />
 			<GoogleMap
 				mapContainerStyle={containerStyle}
 				zoom={13}
@@ -224,6 +237,11 @@ export default function Map() {
 						}}
 						onCloseClick={() => {
 							setSelected(null);
+						}}
+						style={{
+							display: 'grid',
+							justifyContent: 'center',
+							backgroundColor: '#08304b',
 						}}
 					>
 						<InfoWindowGrid>
@@ -277,7 +295,7 @@ function Locate({ panTo }) {
 	);
 }
 
-function Search({ panTo }) {
+function Search({ panTo, setUserRadius }) {
 	const {
 		ready,
 		value,
@@ -296,6 +314,22 @@ function Search({ panTo }) {
 
 	return (
 		<SearchBoxStyle>
+			<RadiusSelect
+				name='distance'
+				id='distance'
+				defaultValue='5000'
+				onChange={(e) => {
+					setUserRadius(e.target.value);
+					// console.log(e.target.value);
+				}}
+			>
+				<option value='1000'>1km</option>
+				<option value='2000'>2km</option>
+				<option value='5000'>5km</option>
+				<option value='10000'>10km</option>
+				<option value='20000'>20km</option>
+				<option value='30000'>30km</option>
+			</RadiusSelect>
 			<Combobox
 				onSelect={async (address) => {
 					setValue(address, false);
@@ -323,7 +357,6 @@ function Search({ panTo }) {
 						}}
 					/>
 				</ComboInput>
-
 				<ComboboxPopover>
 					<ComboboxList>
 						{status === 'OK' &&

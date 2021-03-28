@@ -218,6 +218,9 @@ const CommentBoxGrid = styled.div`
 
 const LeaveAComment = styled.p`
 	grid-area: commentForm;
+	@media (max-width: 510px) {
+		text-align: center;
+	}
 `;
 
 const LoginRegisterLinks = styled.a`
