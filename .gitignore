@@ -5,6 +5,7 @@ variables.env
 # SERVER
 server/node_modules/
 server/variables.env
+server/variables.env.now
 server/sendgrid.env
 
 # CLIENT
