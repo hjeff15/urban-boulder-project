@@ -91,7 +91,7 @@ export default class ForgotForm extends Component {
 		const response = axios
 			.post('http://localhost:4000/forgot', user)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				this.setState({
 					msg: res.data.msg,
 				});

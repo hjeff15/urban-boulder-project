@@ -125,7 +125,7 @@ export default class Reset extends Component {
 				newPasswords
 			)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				localStorage.clear();
 				localStorage.setItem('name', res.data.updatedUser.name);
 				localStorage.setItem('_id', res.data.updatedUser._id);

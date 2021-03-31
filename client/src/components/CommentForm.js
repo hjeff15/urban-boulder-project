@@ -107,7 +107,7 @@ const sliderStyle = {
 	gridArea: 'slider',
 };
 
-const grades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+// const grades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 class CommentForm extends Component {
 	constructor() {
@@ -137,7 +137,7 @@ class CommentForm extends Component {
 				}
 			)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				this.setState({
 					commentAddedMsg: true,
 				});

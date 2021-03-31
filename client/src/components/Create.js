@@ -522,7 +522,7 @@ export default class Create extends Component {
 			axios
 				.post('http://localhost:4000/createCrag', photoData)
 				.then((res) => {
-					console.log(res);
+					// console.log(res);
 					this.props.history.push(`/crag/${res.data.slug}`, {
 						msg: 'Crag successfully created!',
 					});

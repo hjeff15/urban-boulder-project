@@ -22,7 +22,7 @@ export default class EditCrag extends Component {
 		const response = await axios
 			.get(`http://localhost:4000/crags/${id}/edit`)
 			.then((result) => {
-				console.log(result);
+				// console.log(result);
 				if (result.data.author !== localStorage._id) {
 					this.setState({
 						msg: `I'm afraid you must be the author of ${result.data.cragName} in order to edit it`,
@@ -42,7 +42,7 @@ export default class EditCrag extends Component {
 		const request = await axios
 			.post(`http://localhost:4000/crags/${id}/edit`, crag)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				this.props.history.push(`/crag/${res.data.slug}`, {
 					msg: 'Crag successfully updated!',
 				});

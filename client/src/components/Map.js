@@ -140,7 +140,7 @@ export default function Map() {
 				`http://localhost:4000/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${userRadius}`
 			)
 			.then((res) => {
-				console.log(res.data);
+				// console.log(res.data);
 				setCrags(res.data);
 				setLoaded(true);
 			})
@@ -160,22 +160,25 @@ export default function Map() {
 		mapRef.current = map;
 	}, []);
 
-	const panTo = React.useCallback(async ({ lat, lng }) => {
-		mapRef.current.panTo({ lat, lng });
-		mapRef.current.setZoom(14);
-		// Get a new location to query API
-		const response = await axios
-			.get(
-				`http://localhost:4000/api/crags/near?lat=${lat}&lng=${lng}&radius=${userRadius}`
-			)
-			.then((res) => {
-				setCrags(res.data);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-		return response;
-	}, []);
+	const panTo = React.useCallback(
+		async ({ lat, lng }) => {
+			mapRef.current.panTo({ lat, lng });
+			mapRef.current.setZoom(14);
+			// Get a new location to query API
+			const response = await axios
+				.get(
+					`http://localhost:4000/api/crags/near?lat=${lat}&lng=${lng}&radius=${userRadius}`
+				)
+				.then((res) => {
+					setCrags(res.data);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+			return response;
+		},
+		[userRadius]
+	);
 
 	if (loadError) return 'Error Loading Maps';
 	if (!isLoaded)

@@ -85,7 +85,7 @@ exports.getCrags = async (req, res) => {
 		pages: pages,
 		count: count,
 	};
-	console.log(data);
+	// console.log(data);
 	res.send(data);
 };
 
@@ -120,10 +120,10 @@ exports.updateCrag = async (req, res) => {
 	const cragsWithSlug = await Crag.find({ slug: slugRegEx });
 	if (cragsWithSlug.length) {
 		cragToBeEdited.slug = `${cragSlug}-${cragsWithSlug.length + 1}`;
-		console.log(cragToBeEdited.slug);
+		// console.log(cragToBeEdited.slug);
 	} else {
 		cragToBeEdited.slug = cragSlug;
-		console.log(cragToBeEdited.slug);
+		// console.log(cragToBeEdited.slug);
 	}
 	// find and update the crag
 	const crag = await Crag.findOneAndUpdate(
@@ -149,7 +149,7 @@ exports.getCragBySlug = async (req, res) => {
 };
 
 exports.searchCrags = async (req, res) => {
-	console.log(req.query.q);
+	// console.log(req.query.q);
 	const crags = await Crag
 		// Find crags first
 		.find(
@@ -168,7 +168,7 @@ exports.searchCrags = async (req, res) => {
 		})
 		// limit the number of crags returned
 		.limit(5);
-	console.log(crags);
+	// console.log(crags);
 	res.send(crags);
 };
 
@@ -206,7 +206,7 @@ exports.likeCrag = async (req, res) => {
 		{ [cragOperator]: { likes: req.body.userId } },
 		{ new: true }
 	);
-	console.log(cragToUpdate);
+	// console.log(cragToUpdate);
 
 	// Add/Remove liked crags from user profile
 	const likes = user.likes.map((obj) => obj.toString());

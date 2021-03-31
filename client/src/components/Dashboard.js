@@ -200,7 +200,7 @@ export default class Dashboard extends Component {
 		const response = await axios
 			.post(`http://localhost:4000/account/${userId}`, updateInfo)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				this.props.history.push(`/dashboard/${res.data._id}`, {
 					user: res.data,
 					msg: `Details updated ${res.data.name}`,

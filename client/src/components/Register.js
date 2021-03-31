@@ -227,7 +227,7 @@ export default class Register extends Component {
 		axios
 			.post('http://localhost:4000/register', newUser)
 			.then((res) => {
-				console.log(res.data);
+				// console.log(res.data);
 				localStorage.clear();
 				localStorage.setItem('name', res.data.name);
 				localStorage.setItem('_id', res.data._id);
@@ -253,7 +253,7 @@ export default class Register extends Component {
 
 	logout = (e) => {
 		axios.get('http://localhost:4000/logout').then((res) => {
-			console.log(res);
+			// console.log(res);
 			localStorage.clear();
 			this.props.updateUser();
 			this.props.history.push(

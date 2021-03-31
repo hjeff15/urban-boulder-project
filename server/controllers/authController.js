@@ -82,7 +82,7 @@ exports.reset = async (req, res) => {
 
 exports.confirmedPasswords = (req, res, next) => {
 	if (req.body.password === req.body.passwordConfirm) {
-		console.log('Passwords Match!!');
+		// console.log('Passwords Match!!');
 		next();
 		return;
 	}

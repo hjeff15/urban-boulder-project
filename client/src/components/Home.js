@@ -139,7 +139,7 @@ export default class Home extends Component {
 		const response = await axios
 			.get(`http://localhost:4000${this.props.location.pathname}`)
 			.then((result) => {
-				console.log(result.data);
+				// console.log(result.data);
 				this.setState({
 					crags: result.data.crags,
 					loaded: true,

@@ -260,7 +260,7 @@ class ShowCrag extends Component {
 	componentDidUpdate(prevProp, prevState) {
 		if (this.props.location.pathname !== prevProp.location.pathname) {
 			this.fetchData();
-			console.log('component has been updated');
+			// console.log('component has been updated');
 		}
 		if (
 			this.props.location.pathname.state !==
@@ -277,7 +277,7 @@ class ShowCrag extends Component {
 				if (!result.data) {
 					this.props.history.push('/404');
 				} else {
-					console.log(result);
+					// console.log(result);
 					this.setState({ crag: result, loaded: true });
 				}
 			})

@@ -65,7 +65,7 @@ class SearchBox extends Component {
 			.get(`http://localhost:4000/api/search?q=${query}`)
 			.then((res) => {
 				if (res.data.length) {
-					console.log(res.data);
+					// console.log(res.data);
 					this.setState({
 						crags: res.data,
 					});

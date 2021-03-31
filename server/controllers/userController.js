@@ -45,18 +45,18 @@ exports.register = async (req, res, next) => {
 };
 
 exports.account = async (req, res) => {
-	console.log(req.params.id);
+	// console.log(req.params.id);
 	const user = await User.findOne({ _id: req.params.id });
 	const returnedData = {};
 	returnedData.name = user.name;
 	returnedData.email = user.email;
-	console.log(returnedData);
+	// console.log(returnedData);
 	res.json(returnedData);
 };
 
 exports.updateAccount = async (req, res) => {
-	console.log(req.params.id);
-	console.log(req.body);
+	// console.log(req.params.id);
+	// console.log(req.body);
 	const updates = {
 		name: req.body.name,
 		email: req.body.email,
