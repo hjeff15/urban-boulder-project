@@ -104,6 +104,6 @@ if (app.get('env') === 'development') {
 // production error handler
 // app.use(errorHandlers.productionErrors);
 
-app.listen(process.env.PORT, function () {
+app.listen(process.env.PORT || 4000, function () {
 	console.log('Server is running on Port: ' + process.env.PORT);
 });
