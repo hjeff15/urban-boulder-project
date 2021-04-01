@@ -102,7 +102,7 @@ if (app.get('env') === 'development') {
 }
 
 // Check our app is working on Server (Heroku)
-app.get('/', (req, res) => { res.send('Hello from Express!')
+// app.get('/', (req, res) => { res.send('Hello from Express!')
 
 // production error handler
 // app.use(errorHandlers.productionErrors);
