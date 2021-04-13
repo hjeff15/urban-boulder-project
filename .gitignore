@@ -1,6 +1,7 @@
 /node_modules
 .env
 variables.env
+sendgrid.env
 
 # SERVER
 server/node_modules/
