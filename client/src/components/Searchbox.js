@@ -62,7 +62,7 @@ class SearchBox extends Component {
 
 	search = (query) => {
 		const response = axios
-			.get(`http://localhost:4000/api/search?q=${query}`)
+			.get(`${process.env.REACT_APP_SERVER}/api/search?q=${query}`)
 			.then((res) => {
 				if (res.data.length) {
 					// console.log(res.data);

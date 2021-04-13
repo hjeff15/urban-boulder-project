@@ -27,32 +27,16 @@ const Title = styled.h1`
 	padding: 1.2rem;
 	margin: 0.5rem;
 	border-radius: 20px 0 0 20px;
-	a {
+	p {
 		color: #d9b92e;
 		text-decoration: none;
 		cursor: pointer;
+		margin: 0px;
 	}
 	@media (max-width: 790px) {
 		font-size: 1.5rem;
 	}
 `;
-
-// const Navigators = styled.a`
-// 	color: #d9b92e;
-// 	font-size: 1.7rem;
-// 	text-decoration: none;
-// 	justify-self: center;
-// 	align-self: center;
-// 	&:hover {
-// 		text-decoration: underline;
-// 	}
-// 	@media (max-width: 790px) {
-// 		font-size: 1.3rem;
-// 	}
-// 	@media (max-width: 512px) {
-// 		display: none;
-// 	}
-// `;
 
 const Logout = styled.p`
 	color: #d9b92e;
@@ -125,10 +109,12 @@ class Header extends Component {
 	}
 
 	logout = async (e) => {
-		await axios.get('http://localhost:4000/logout').then((res) => {
-			localStorage.clear();
-			this.props.updateUser();
-		});
+		await axios
+			.get(`${process.env.REACT_APP_SERVER}/logout`)
+			.then((res) => {
+				localStorage.clear();
+				this.props.updateUser();
+			});
 		this.props.history.push('/', { msg: 'Logged out!' });
 	};
 
@@ -143,10 +129,10 @@ class Header extends Component {
 			<React.Fragment>
 				<PageHeader>
 					<Title>
-						<a href='/'>
+						<p onClick={() => this.props.history.push('/')}>
 							Urban <br />
 							Boulder Project
-						</a>
+						</p>
 					</Title>
 					<Navigator path='/about' name='About' />
 					<Navigator path='/map' name='Map' />

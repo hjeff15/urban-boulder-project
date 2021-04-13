@@ -154,7 +154,7 @@ export default class Dashboard extends Component {
 	async fetchData() {
 		const userId = localStorage.getItem('_id');
 		const response = await axios
-			.get(`http://localhost:4000/account/${userId}`)
+			.get(`${process.env.REACT_APP_SERVER}/account/${userId}`)
 			.then((res) => {
 				if (res) {
 					this.setState({
@@ -198,7 +198,10 @@ export default class Dashboard extends Component {
 			email: this.state.email,
 		};
 		const response = await axios
-			.post(`http://localhost:4000/account/${userId}`, updateInfo)
+			.post(
+				`${process.env.REACT_APP_SERVER}/account/${userId}`,
+				updateInfo
+			)
 			.then((res) => {
 				// console.log(res);
 				this.props.history.push(`/dashboard/${res.data._id}`, {

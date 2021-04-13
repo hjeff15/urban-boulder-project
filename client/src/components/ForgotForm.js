@@ -50,13 +50,14 @@ const EmailInput = styled.input`
 
 const ErrorMsg = styled.p`
 	justify-self: center;
+	text-align: center;
 	color: red;
 	background-color: #ffe3f1;
 	border-radius: 20px;
 	padding: 5px;
 `;
 
-const Submit = styled.input`
+const Submit = styled.button`
 	grid-area: button;
 	background-color: #d9b92e;
 	color: white;
@@ -89,7 +90,7 @@ export default class ForgotForm extends Component {
 		e.preventDefault();
 		const user = { email: this.state.email };
 		const response = axios
-			.post('http://localhost:4000/forgot', user)
+			.post(`${process.env.REACT_APP_SERVER}/forgot`, user)
 			.then((res) => {
 				// console.log(res);
 				this.setState({
@@ -115,7 +116,7 @@ export default class ForgotForm extends Component {
 						placeholder='Enter registered email...'
 						onChange={this.onEmailChange}
 					/>
-					<Submit type='submit' value='Send a reset &raquo;' />
+					<Submit type='submit'>Send a reset &raquo;</Submit>
 				</FormContainer>
 			</Container>
 		);

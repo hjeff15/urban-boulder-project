@@ -5,7 +5,6 @@ export function Tick({ tick, count }) {
 	const [width, setWidth] = useState(winWidth);
 
 	useEffect(() => {
-		console.log(width);
 		const handleResize = () => {
 			if (window.innerWidth < 600) {
 				setWidth(true);

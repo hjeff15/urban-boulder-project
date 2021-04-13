@@ -92,7 +92,7 @@ export default class Reset extends Component {
 	fetchData = async () => {
 		const response = await axios
 			.get(
-				`http://localhost:4000/account/reset/${this.props.match.params.token}`
+				`${process.env.REACT_APP_SERVER}/account/reset/${this.props.match.params.token}`
 			)
 			.then((res) => {
 				if (res.data.msg) {
@@ -121,7 +121,7 @@ export default class Reset extends Component {
 		};
 		const postData = axios
 			.post(
-				`http://localhost:4000/account/reset/${this.props.match.params.token}`,
+				`${process.env.REACT_APP_SERVER}/account/reset/${this.props.match.params.token}`,
 				newPasswords
 			)
 			.then((res) => {

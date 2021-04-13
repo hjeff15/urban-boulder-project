@@ -9,7 +9,7 @@ exports.loginForm = (req, res) => {
 	res.send('Login is working');
 };
 
-exports.validateRegister = (req, res, next) => {
+exports.validateRegister = async (req, res, next) => {
 	req.sanitizeBody('name');
 	req.checkBody('name', 'You must supply a name').notEmpty();
 	req.checkBody('email', 'You must supply an email').isEmail();
@@ -28,12 +28,19 @@ exports.validateRegister = (req, res, next) => {
 		'Ooops, looks like your passwords do not match...'
 	).equals(req.body.password);
 
-	const errors = req.validationErrors();
-	if (errors) {
-		const sendErrors = errors.map((err) => err.msg);
-		res.send(sendErrors);
+	const checkIfName = await User.findOne({ name: req.body.name });
+	const checkIfEmail = await User.findOne({ email: req.body.email });
+	if (checkIfName || checkIfEmail) {
+		res.send('User Found');
+		return;
 	} else {
-		next();
+		const errors = req.validationErrors();
+		if (errors) {
+			const sendErrors = errors.map((err) => err.msg);
+			res.send(sendErrors);
+		} else {
+			next();
+		}
 	}
 };
 

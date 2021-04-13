@@ -45,14 +45,15 @@ const SearchBoxStyle = styled.div`
 		width: auto;
 		left: 0;
 	}
-	@media (max-width: 360px) {
-		grid-template-columns: 65vw 20vw 15vw;
+	@media (max-width: 375px) {
+		grid-template-columns: 65vw 25vw 10vw;
 	}
 `;
 
 const ComboInput = styled.div`
 	justify-self: start;
 	grid-area: search;
+	grid-column: 1 / 2;
 `;
 
 const GetLocationButton = styled.button`
@@ -60,6 +61,7 @@ const GetLocationButton = styled.button`
 	height: 100%;
 	width: 100%;
 	border: none;
+	border-radius: 8px;
 	z-index: 10;
 	background-color: #d9b92e;
 	justify-self: end;
@@ -69,16 +71,20 @@ const GetLocationButton = styled.button`
 
 const RadiusSelect = styled.select`
 	grid-area: dropdown;
+	border: 1px solid #d9b92e;
 	font-size: 0.7rem;
 	font-weight: bold;
-	padding-left: 5px;
+	padding-left: 12px;
 	color: #d9b92e;
 	background-color: #08304b;
-	@media (max-width: 270px) {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	@media (max-width: 375px) {
 		-webkit-appearance: none;
 		-moz-appearance: none;
-		text-indent: 1px;
 		text-overflow: '';
+		margin-right: 0px;
+		padding-left: 32%;
 	}
 `;
 
@@ -89,6 +95,9 @@ const InfoWindowGrid = styled.div`
 	justify-items: center;
 	background-color: #08304b;
 	width: 165px;
+	@media (max-width: 375px) {
+		min-width: 150px;
+	}
 `;
 
 const InfoWindowTitle = styled.a`
@@ -137,7 +146,7 @@ export default function Map() {
 	useEffect(() => {
 		const response = axios
 			.get(
-				`http://localhost:4000/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${userRadius}`
+				`${process.env.REACT_APP_SERVER}/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${userRadius}`
 			)
 			.then((res) => {
 				// console.log(res.data);
@@ -167,7 +176,7 @@ export default function Map() {
 			// Get a new location to query API
 			const response = await axios
 				.get(
-					`http://localhost:4000/api/crags/near?lat=${lat}&lng=${lng}&radius=${userRadius}`
+					`${process.env.REACT_APP_SERVER}/api/crags/near?lat=${lat}&lng=${lng}&radius=${userRadius}`
 				)
 				.then((res) => {
 					setCrags(res.data);
@@ -290,8 +299,8 @@ function Locate({ panTo }) {
 			<FaLocationArrow
 				style={{
 					color: 'white',
-					width: '2em',
-					height: '2em',
+					width: '1.2em',
+					height: '1.2em',
 				}}
 			/>
 		</GetLocationButton>

@@ -15,6 +15,7 @@ import WrongURL from './components/WrongURL';
 import Dashboard from './components/Dashboard';
 import Reset from './components/Reset';
 import Map from './components/Map';
+import axios from 'axios';
 // import { set } from 'mongoose';
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
@@ -54,6 +55,7 @@ class App extends Component {
 				likes: [],
 			},
 			loggedIn: false,
+			autoLoggedOut: false,
 		};
 	}
 
@@ -107,18 +109,35 @@ class App extends Component {
 				user: userData,
 				loggedIn: false,
 			});
+			clearTimeout(timer);
 		}
 	};
 
-	loginTimer() {
+	autoLogout = async (e) => {
+		await axios
+			.get(`${process.env.REACT_APP_SERVER}/logout`)
+			.then((res) => {
+				localStorage.clear();
+				this.updateUser();
+				this.setState({
+					autoLoggedOut: true,
+				});
+				console.log('Auto Logged Out');
+			})
+			.catch((err) => console.log(err));
+		this.setState({
+			autoLoggedOut: false,
+		});
+	};
+
+	loginTimer = () => {
 		let timerStart = Date.now();
-		const timeoutTime = timerStart + 3 * 1000; // 5 seconds
+		const timeoutTime = timerStart + 1200 * 1000; // 20 minutes (60 seconcds x 20)
 		let time = timeoutTime - timerStart;
 		timer = setTimeout(() => {
-			console.log('LOGGED YOU OUT');
+			this.autoLogout();
 		}, time);
-		console.log('Timer has started: ' + timerStart);
-	}
+	};
 
 	resetTimer = () => {
 		clearTimeout(timer);
@@ -127,11 +146,22 @@ class App extends Component {
 
 	render() {
 		const { user } = this.state;
+		const { autoLoggedOut } = this.state;
 
 		return (
 			<Router>
 				<div onClick={this.resetTimer}>
 					<Header user={user} updateUser={this.updateUser} />
+					{autoLoggedOut ? (
+						<Redirect
+							to={{
+								pathname: '/',
+								state: {
+									autoLogOut: true,
+								},
+							}}
+						/>
+					) : null}
 					<Route
 						path='/'
 						exact

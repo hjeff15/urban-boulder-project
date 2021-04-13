@@ -5,12 +5,10 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Loader from 'react-loader-spinner';
 //Components
 import Footer from './Footer';
-
-// Components
 import CragCard from './CragCard';
 import { PagesNav } from './PagesNav';
 
-const HomeDiv = styled.div`
+const Container = styled.div`
 	background-color: #08304b;
 	display: grid;
 	margin: 0px;
@@ -55,8 +53,8 @@ const ListItem = styled.li`
 `;
 
 const Msg = styled.h4`
-	background-color: #ffe3f1;
-	color: red;
+	background-color: #d5b62f;
+	color: #b72424;
 	border-radius: 10px;
 	margin-top: 0px;
 	padding: 2px 10px 2px 10px;
@@ -83,6 +81,13 @@ const LoginMsg = styled.h3`
 	}
 `;
 
+const GoToLogin = styled.span`
+	color: blue;
+	cursor: pointer;
+`;
+
+let timer = null;
+
 export default class Home extends Component {
 	constructor() {
 		super();
@@ -93,6 +98,7 @@ export default class Home extends Component {
 			user: {},
 			msg: '',
 			welcomeMsg: '',
+			autoLogoutMsg: false,
 			page: null,
 			pages: null,
 			count: null,
@@ -109,6 +115,20 @@ export default class Home extends Component {
 		if (prevProps.location.state !== this.props.location.state) {
 			this.checkMsg();
 		}
+		if (prevProps.user._id !== '' && this.props.user._id === '') {
+			this.checkLogout();
+		}
+	}
+	// Method here to inhibit 'Can't perform a React state update on an unmounted component.' error msg.
+	componentWillUnmount() {
+		clearTimeout(timer);
+	}
+
+	checkLogout() {
+		this.setState({
+			user: this.props.user,
+			loggedIn: false,
+		});
 	}
 
 	updateUserState() {
@@ -127,8 +147,15 @@ export default class Home extends Component {
 				this.setState({
 					welcomeMsg: this.props.location.state.welcomeMsg,
 				});
-			} else {
-				this.setState({ welcomeMsg: '' });
+				timer = setTimeout(
+					() => this.setState({ welcomeMsg: '' }),
+					3000
+				);
+			}
+			if (this.props.location.state.autoLogOut) {
+				this.setState({
+					autoLogoutMsg: true,
+				});
 			}
 		} else {
 			this.setState({ msg: '', welcomeMsg: '' });
@@ -137,7 +164,9 @@ export default class Home extends Component {
 
 	async fetchData() {
 		const response = await axios
-			.get(`http://localhost:4000${this.props.location.pathname}`)
+			.get(
+				`${process.env.REACT_APP_SERVER}${this.props.location.pathname}`
+			)
 			.then((result) => {
 				// console.log(result.data);
 				this.setState({
@@ -163,8 +192,23 @@ export default class Home extends Component {
 
 	render() {
 		return (
-			<HomeDiv>
+			<Container>
 				{this.state.msg && <Msg>{this.state.msg}</Msg>}
+				{this.state.autoLogoutMsg && (
+					<Msg>
+						<p>
+							You have been logged out due to inactivity. Click{' '}
+							<GoToLogin
+								onClick={() =>
+									this.props.history.push('/login')
+								}
+							>
+								here
+							</GoToLogin>{' '}
+							to login in again!
+						</p>
+					</Msg>
+				)}
 				{this.state.welcomeMsg && (
 					<WelcomeMsg>{this.state.welcomeMsg}</WelcomeMsg>
 				)}
@@ -209,7 +253,7 @@ export default class Home extends Component {
 					count={this.state.count}
 				></PagesNav>
 				<Footer />
-			</HomeDiv>
+			</Container>
 		);
 	}
 }

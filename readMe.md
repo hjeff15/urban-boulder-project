@@ -26,6 +26,26 @@ TO DO LIST
 <!-- 8. Add React-helmet or see other way to engage SEO -->
  <!-- 9. Change MailTrap to MailChimp or other... -->
 
+<!-- ********************* -->
+
+<!-- 10. Change api link to .env file -->
+
+<!-- 11. Finish info box on map sizing -->
+
+12. Testing? Pay particular attention to the autoLogout functions and the welcome msg.
+    <!-- 13. Finish auto logout? -->
+    <!-- 13. Write the about page!!! -->
+    <!-- 14. Make sure password is X chars and X numbers and X length. -->
+    <!-- 15. Error msg if same username and/or email already used -->
+13. See ShowCrag component why ther is a double render. Is the setState component re-setting before history.push?
+14. Change hover of Tooltip to onclick.
+15. Add to About component a reason for only having crag.Individual routes to be added later.
+16. Check password reminder post-deploy.
 <!-- ************** DEPLOY *************** -->
 
-SEE https://www.youtube.com/watch?v=aibtHnbeuio
+SEE
+https://www.youtube.com/watch?v=aibtHnbeuio
+DEPLOYMENT
+https://www.berato.tech/connecting-your-heroku-app-to-atlas
+https://developer.mongodb.com/how-to/use-atlas-on-heroku/
+https://dev.to/stlnick/how-to-deploy-a-full-stack-mern-app-with-heroku-netlify-ncb

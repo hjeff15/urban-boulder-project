@@ -6,8 +6,9 @@ import { striptags } from 'striptags';
 const ContainerForm = styled.form`
 	display: grid;
 	grid-template-columns: 15% repeat(3, 1fr) 15%;
-	grid-template-rows: repeat(5, 4rem);
+	grid-template-rows: auto repeat(5, 4rem) auto;
 	grid-template-areas:
+		'. . error error .'
 		'. title title title .'
 		'. name-label name-input name-input .'
 		'. email-label email-input email-input .'
@@ -16,12 +17,13 @@ const ContainerForm = styled.form`
 		'. . register-button register-button .';
 	justify-items: center;
 	@media (max-width: 830px) {
-		grid-template-columns: 10% repeat(3, 1fr) auto;
+		grid-template-columns: 10vw repeat(3, 1fr) 10vw;
 	}
 	@media (max-width: 680px) {
 		grid-template-columns: 20vw auto 20vw;
-		grid-template-rows: repeat(10, auto);
+		grid-template-rows: auto repeat(10, auto);
 		grid-template-areas:
+			'.error .'
 			'.title .'
 			'.name-label .'
 			'.name-input .'
@@ -36,6 +38,7 @@ const ContainerForm = styled.form`
 	@media (max-width: 450px) {
 		grid-template-columns: minmax(255px, auto);
 		grid-template-areas:
+			'error '
 			'title '
 			'name-label '
 			'name-input '
@@ -161,7 +164,7 @@ const ConfirmInput = styled.input`
 	}
 `;
 
-const Submit = styled.input`
+const Submit = styled.button`
 	grid-area: register-button;
 	background-color: #d9b92e;
 	color: white;
@@ -178,19 +181,30 @@ const Submit = styled.input`
 	}
 `;
 
+const ErrorMsg = styled.p`
+	grid-area: error;
+	justify-self: start;
+	color: red;
+	background-color: pink;
+	text-align: center;
+	word-break: keep-all;
+	border-radius: 5px;
+	padding: 0.5rem;
+	@media (max-width: 680px) {
+		justify-self: center;
+	}
+`;
+
 export default class Register extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			name: '',
 			email: '',
-			// photo: null,
-			// photoPreviewURL: {},
-			// photoLoaded: false,
 			password: '',
 			passwordConfirm: '',
 			data: '',
-			errors: [],
+			errors: '',
 			loadedError: false,
 		};
 	}
@@ -218,41 +232,76 @@ export default class Register extends Component {
 
 	onSubmit = async (e) => {
 		e.preventDefault();
-		const newUser = {
-			name: striptags(this.state.name),
-			email: striptags(this.state.email),
-			password: striptags(this.state.password),
-			passwordConfirm: striptags(this.state.passwordConfirm),
-		};
-		axios
-			.post('http://localhost:4000/register', newUser)
-			.then((res) => {
-				// console.log(res.data);
-				localStorage.clear();
-				localStorage.setItem('name', res.data.name);
-				localStorage.setItem('_id', res.data._id);
-				localStorage.setItem('emailHash', res.data.emailHash);
-				localStorage.setItem('loggedIn', true);
-				this.props.updateUser(
-					res.data.name,
-					res.data._id,
-					res.data.emailHash,
-					res.data.likes
-				);
-				this.props.history.push({
-					pathname: '/',
-					state: {
-						msg: `Welcome to your new account ${res.data.name}!`,
-					},
+		const regEx = new RegExp(
+			'^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$'
+		);
+		if (
+			regEx.test(this.state.password) ||
+			this.state.password !== this.state.passwordConfirm
+		) {
+			if (regEx.test(this.state.password)) {
+				this.setState({
+					loadedError: true,
+					errors:
+						'Password must have at least 8 characters, one letter, one uppercase letter, one number and one special character',
 				});
-			}) // re-direct to login on successful register
-			.catch(function (error) {
-				console.log('Error on Authentication:', error);
-			});
+			}
+			if (this.state.password !== this.state.passwordConfirm) {
+				this.setState({
+					loadedError: true,
+					errors: 'Passwords must match',
+				});
+			}
+			return;
+		} else {
+			const newUser = {
+				name: striptags(this.state.name),
+				email: striptags(this.state.email),
+				password: striptags(this.state.password),
+				passwordConfirm: striptags(this.state.passwordConfirm),
+			};
+			axios
+				.post(`${process.env.REACT_APP_SERVER}/register`, newUser)
+				.then((res) => {
+					if (res.data === 'User Found') {
+						this.setState({
+							loadedError: true,
+							errors:
+								'Sorry, that username or email already exists in our database',
+						});
+						return;
+					} else {
+						localStorage.clear();
+						localStorage.setItem('name', res.data.name);
+						localStorage.setItem('_id', res.data._id);
+						localStorage.setItem('emailHash', res.data.emailHash);
+						localStorage.setItem('loggedIn', true);
+						this.props.updateUser(
+							res.data.name,
+							res.data._id,
+							res.data.emailHash,
+							res.data.likes
+						);
+						this.props.history.push({
+							pathname: '/',
+							state: {
+								msg: `Welcome to your new account ${res.data.name}!`,
+							},
+						});
+					}
+				}) // re-direct to login on successful register
+				.catch((errors) => {
+					console.log('Error on Authentication:', errors);
+					this.setState({
+						loadedError: true,
+						errors: errors,
+					});
+				});
+		}
 	};
 
 	logout = (e) => {
-		axios.get('http://localhost:4000/logout').then((res) => {
+		axios.get(`${process.env.REACT_APP_SERVER}/logout`).then((res) => {
 			// console.log(res);
 			localStorage.clear();
 			this.props.updateUser();
@@ -270,14 +319,10 @@ export default class Register extends Component {
 	render() {
 		return (
 			<div>
-				{this.state.loadedError
-					? this.state.errors.map((err, i) => (
-							<p className='error-msg' key={i}>
-								{err}
-							</p>
-					  ))
-					: null}
 				<ContainerForm onSubmit={this.onSubmit}>
+					{this.state.loadedError ? (
+						<ErrorMsg>{this.state.errors}</ErrorMsg>
+					) : null}
 					<Title>Register your details:</Title>
 					<NameLabel htmlFor='name'>Name: </NameLabel>
 					<NameInput
@@ -319,7 +364,7 @@ export default class Register extends Component {
 						onChange={this.onChangePasswordConfirm}
 					/>
 
-					<Submit type='submit' value='Register' />
+					<Submit type='submit'>Register</Submit>
 				</ContainerForm>
 			</div>
 		);

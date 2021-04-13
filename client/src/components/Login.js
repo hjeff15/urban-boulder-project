@@ -116,7 +116,7 @@ export default class Login extends Component {
 			password: this.state.password,
 		};
 		axios
-			.post('http://localhost:4000/login', loginDetails)
+			.post(`${process.env.REACT_APP_SERVER}/login`, loginDetails)
 			.then((res) => {
 				// console.log(res.data);
 				if (res.data === 'Not Logged In...') {

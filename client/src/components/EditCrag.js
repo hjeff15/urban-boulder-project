@@ -20,7 +20,7 @@ export default class EditCrag extends Component {
 
 	async fetchData(id) {
 		const response = await axios
-			.get(`http://localhost:4000/crags/${id}/edit`)
+			.get(`${process.env.REACT_APP_SERVER}/crags/${id}/edit`)
 			.then((result) => {
 				// console.log(result);
 				if (result.data.author !== localStorage._id) {
@@ -40,7 +40,7 @@ export default class EditCrag extends Component {
 
 	async postData(crag, id) {
 		const request = await axios
-			.post(`http://localhost:4000/crags/${id}/edit`, crag)
+			.post(`${process.env.REACT_APP_SERVER}/crags/${id}/edit`, crag)
 			.then((res) => {
 				// console.log(res);
 				this.props.history.push(`/crag/${res.data.slug}`, {

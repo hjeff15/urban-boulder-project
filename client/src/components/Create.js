@@ -226,37 +226,6 @@ const PhotoLoaded = styled.img`
 	width: 20vw;
 `;
 
-// const Difficulty = styled.div`
-// 	grid-area: difficulty;
-// 	display: grid;
-// 	grid-template-columns: repeat(4, 25%);
-// 	color: #d9b92e;
-// 	margin-bottom: 0.3rem;
-// 	@media (max-width: 740px) {
-// 		margin-left: 1rem;
-// 	}
-// 	@media (max-width: 600px) {
-// 		font-size: 1rem;
-// 		margin-bottom: 10px;
-// 	}
-// `;
-// const DifficultyLabel = styled.label`
-// 	grid-column: 2;
-// 	font-size: 1.3rem;
-// 	@media (max-width: 740px) {
-// 		grid-column: 1;
-// 	}
-// 	@media (max-width: 600px) {
-// 		font-size: 1rem;
-// 	}
-// `;
-
-// const DifficultySelect = styled.select`
-// 	@media (max-width: 430px) {
-// 		grid-column: 3;
-// 	}
-// `;
-
 const RangeSlider = styled.div`
 	grid-area: newDifficulty;
 	display: grid;
@@ -520,7 +489,7 @@ export default class Create extends Component {
 			this.props.postData(photoData, id);
 		} else {
 			axios
-				.post('http://localhost:4000/createCrag', photoData)
+				.post(`${process.env.REACT_APP_SERVER}/createCrag`, photoData)
 				.then((res) => {
 					// console.log(res);
 					this.props.history.push(`/crag/${res.data.slug}`, {
@@ -534,6 +503,7 @@ export default class Create extends Component {
 						formError: true,
 					});
 				});
+			// Is this code below why there is a double render after create is made?
 			this.setState({
 				cragName: '',
 				cragDescription: '',

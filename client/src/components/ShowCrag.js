@@ -272,7 +272,9 @@ class ShowCrag extends Component {
 
 	async fetchData() {
 		const response = await axios
-			.get(`http://localhost:4000${this.props.location.pathname}`)
+			.get(
+				`${process.env.REACT_APP_SERVER}${this.props.location.pathname}`
+			)
 			.then((result) => {
 				if (!result.data) {
 					this.props.history.push('/404');

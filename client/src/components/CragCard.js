@@ -153,7 +153,7 @@ class CragCard extends Component {
 		const userId = this.props.user._id;
 		const response = await axios
 			.post(
-				`http://localhost:4000/api/crags/${this.props.cragInfo._id}/like`,
+				`${process.env.REACT_APP_SERVER}/api/crags/${this.props.cragInfo._id}/like`,
 				{ userId }
 			)
 			.then((res) => {
@@ -242,7 +242,11 @@ class CragCard extends Component {
 							/>
 						) : (
 							<IoThumbsUpOutline
-								style={{ width: '40px', height: '40px' }}
+								style={{
+									width: '40px',
+									height: '40px',
+									color: '#d9b92e',
+								}}
 							/>
 						)}
 						<LikeNumber>

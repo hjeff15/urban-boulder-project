@@ -52,7 +52,7 @@ exports.forgot = async (req, res) => {
 	user.resetPasswordExpires = Date.now() + 3600000; // 1 hour from now
 	await user.save();
 	// 3. Send them an email with the token
-	const resetURL = `http://localhost:3000/account/reset/${user.resetPasswordToken}`;
+	const resetURL = `http://www.urbanboulderproject.com/account/reset/${user.resetPasswordToken}`;
 	await mail.send({
 		user: user,
 		subject: 'Password Reset Request',

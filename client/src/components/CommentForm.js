@@ -130,7 +130,7 @@ class CommentForm extends Component {
 		};
 		const response = await axios
 			.post(
-				`http://localhost:4000/comments/${this.props.cragInfo.data._id}`,
+				`${process.env.REACT_APP_SERVER}/comments/${this.props.cragInfo.data._id}`,
 				{
 					review,
 					user,
