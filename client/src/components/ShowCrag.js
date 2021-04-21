@@ -331,7 +331,7 @@ class ShowCrag extends Component {
 							}
 						/>
 						<CragImage
-							src={`/images/${this.state.crag.data.photo}`}
+							src={`${process.env.REACT_APP_SERVER}/images/${this.state.crag.data.photo}`}
 							alt='crag'
 						/>
 						{/* <CragLikes> */}

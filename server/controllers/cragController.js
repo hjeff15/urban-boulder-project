@@ -41,7 +41,7 @@ exports.resize = async (req, res, next) => {
 	// then resize it....
 	const photo = await jimp.read(req.file.buffer);
 	await photo.resize(800, jimp.AUTO);
-	await photo.write(`../client/public/images/${req.body.photo}`, (err) =>
+	await photo.write(`../server/public/images/${req.body.photo}`, (err) =>
 		console.error('jimp write error: ', err)
 	);
 	// Once saved, keep going....

@@ -8,6 +8,7 @@ server/node_modules/
 server/variables.env
 server/variables.env.now
 server/sendgrid.env
+server/public/images
 
 # CLIENT
 client/node_modules

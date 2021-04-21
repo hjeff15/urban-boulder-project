@@ -44,9 +44,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.set('view engine', 'json');
 
-// Takes the raw requests and turns them into usable properties on req.body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Takes the raw requests and turns them into usable properties on req.body. Also limited file size to 50mb.
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const routes = require('./routes/index');
 // Exposes a bunch of methods for validating data. Used heavily on userController.validateRegister
