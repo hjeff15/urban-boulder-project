@@ -64,25 +64,24 @@ export default class About extends Component {
 					<Subtitle>How Does It Work?</Subtitle>
 					<Paragraph>
 						This site is currently in its alpha phase, meaning
-						functionality is pretty basic at the moment. It is free
-						to browse all the crags added and use the map to find
-						what is local to you. However, if you feel like you have
-						something to share, be it a new crag or make a comment
-						and give the your opinion on the grade, or just give the
-						place a thumbs-up, then you will need to register as a
-						UBP user and login to do so. If there is something you
-						feel we could do to improve this please do let us know
-						by contacting us using the link at the bottom of this
-						page.
+						functionality is pretty basic at the moment. You are
+						free to browse all the crags added and use the map to
+						find what is local to you. However, if you feel like you
+						have something to share, be it a new crag or make a
+						comment and give the your opinion on the grade, or just
+						give the place a thumbs-up, then you will need to
+						register as a UBP user and login to do so. If there is
+						something you feel we could do to improve this please do
+						let us know by contacting us using the link at the
+						bottom of this page.
 					</Paragraph>
 					<Subtitle>What's In The Pipeline?</Subtitle>
 					<Paragraph>
 						This really depends on if this service is being used. If
 						there is some enthusiasm about the project then it would
 						be great to develop the site to incorporate things like
-						in-app messaging, recommended user-circuits and more
-						space for photo uploads. But we will have to see if and
-						how the site is used.
+						in-app messaging, recommended user-circuits, more space
+						for photo uploads and individual boulder problems.
 					</Paragraph>
 					<Subtitle>A Few Ground Rules</Subtitle>
 					<Paragraph>
