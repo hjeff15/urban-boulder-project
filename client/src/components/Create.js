@@ -199,10 +199,19 @@ const Photo = styled.div`
 	grid-area: photo;
 	display: grid;
 	grid-template-columns: repeat(4, 25%);
+	grid-template-rows: repeat(2, auto);
+	grid-template-areas:
+		'. label input .'
+		'. img img .';
 	color: #d9b92e;
 	margin-bottom: 0.3rem;
 	@media (max-width: 740px) {
 		margin-left: 1rem;
+	}
+	@media (max-width: 375px) {
+		grid-template-areas:
+			'. label input .'
+			'img img img img';
 	}
 `;
 const PhotoLabel = styled.label`
@@ -224,6 +233,18 @@ const PhotoInput = styled.input`
 
 const PhotoLoaded = styled.img`
 	width: 20vw;
+	grid-area: img;
+	justify-self: center;
+	padding-top: 10px;
+	@media (max-width: 740px) {
+		width: 40vw;
+	}
+	@media (max-width: 430px) {
+		width: 50vw;
+	}
+	@media (max-width: 375px) {
+		width: 75vw;
+	}
 `;
 
 const RangeSlider = styled.div`
@@ -614,36 +635,6 @@ export default class Create extends Component {
 							/>
 						)}
 					</Photo>
-					{/* <Difficulty>
-						<DifficultyLabel htmlFor='difficulty'>
-							Difficulty:{' '}
-						</DifficultyLabel>
-						<DifficultySelect
-							id='difficulty'
-							name='difficulty'
-							required
-							value={this.state.difficulty}
-							onChange={this.onChangeDifficulty}
-						>
-							<option>V0</option>
-							<option>V1</option>
-							<option>V2</option>
-							<option>V3</option>
-							<option>V4</option>
-							<option>V5</option>
-							<option>V6</option>
-							<option>V7</option>
-							<option>V8</option>
-							<option>V9</option>
-							<option>V10</option>
-							<option>V11</option>
-							<option>V12</option>
-							<option>V13</option>
-							<option>V14</option>
-							<option>V15</option>
-							<option>V16</option>
-						</DifficultySelect>
-					</Difficulty> */}
 					<RangeSlider>
 						<Slider
 							rootStyle={sliderStyle}
