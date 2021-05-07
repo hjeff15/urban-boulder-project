@@ -36,6 +36,22 @@ space for photo uploads and individual boulder problems. But we will have to see
 
 Still in alpha. There's a few elements that need shifting when viewed on mobile.
 
+## Features
+
+---
+
+In no particular order.
+
+-   Protected Routing in React.
+-   Autocomplete search from APIs.
+-   Google maps integration with a search radius options.
+-   Server side user authentication.
+-   Password-reset email from node.
+-   Consuming of RESTful API using Axios.
+-   MVC design pattern on server side code.
+-   Custom MongoDB aggregations.
+-   Using pre-save hooks to make unique slugs for each 'Crag'.
+
 **IMPORTANT** Make sure to limit the google api key to the final domain name used (post Deploy?)
 
 SEE

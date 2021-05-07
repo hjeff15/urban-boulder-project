@@ -149,7 +149,6 @@ export default function Map() {
 				`${process.env.REACT_APP_SERVER}/api/crags/near?lat=${center.lat}&lng=${center.lng}&radius=${userRadius}`
 			)
 			.then((res) => {
-				// console.log(res.data);
 				setCrags(res.data);
 				setLoaded(true);
 			})
@@ -265,7 +264,7 @@ export default function Map() {
 								</InfoWindowTitle>
 							</h2>
 							<InfoWindowImg
-								src={`/images/${selected.photo}`}
+								src={`https://urban-boulder-project.s3.eu-west-2.amazonaws.com/${selected.s3photo}`}
 								width={150}
 								alt='cragImage'
 							/>

@@ -2,6 +2,7 @@
 .env
 variables.env
 sendgrid.env
+TODO.txt
 
 # SERVER
 server/node_modules/

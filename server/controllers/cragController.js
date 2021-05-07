@@ -5,10 +5,15 @@ const multer = require('multer');
 const jimp = require('jimp');
 const uuid = require('uuid');
 const slug = require('slugs');
+const fs = require('fs');
+const util = require('util');
 const { findById } = require('../models/User');
+const { uploadS3File, getFileStream } = require('../s3');
+
+const unlinkFile = util.promisify(fs.unlink);
 
 const multerOptions = {
-	storage: multer.memoryStorage(),
+	dest: 'public/images',
 	fileFilter(req, file, next) {
 		const isPhoto = file.mimetype.startsWith('image/');
 		if (isPhoto) {
@@ -17,11 +22,6 @@ const multerOptions = {
 			next({ message: "That file type isn't allowed!!" }, false);
 		}
 	},
-};
-
-exports.homePage = (req, res) => {
-	const hugo = { name: 'Hugo', age: 29, feeling: 'odd' };
-	res.json(hugo);
 };
 
 exports.addCrag = (req, res) => {
@@ -36,20 +36,32 @@ exports.resize = async (req, res, next) => {
 		next(); //skip to the next middleware
 		return;
 	}
-	const extension = req.file.mimetype.split('/')[1];
-	req.body.photo = `${uuid.v4()}.${extension}`;
+
+	const s3Location = await uploadS3File(req.file);
+	try {
+		await unlinkFile(req.file.path);
+	} catch (e) {
+		console.error(e);
+	}
+
+	req.body.photo = s3Location.key;
+	req.body.s3photo = s3Location.key;
+
+	//OLD CODE BELOW IF IMG SAVED TO SERVER. DOES NOT WORK ON HEROKU UNPAID TIER BUT HERE FOR POSTERITY?
+	// const extension = req.file.mimetype.split('/')[1];
+	// req.body.photo = `${uuid.v4()}.${extension}`;
+
 	// then resize it....
-	const photo = await jimp.read(req.file.buffer);
-	await photo.resize(800, jimp.AUTO);
-	await photo.write(`../server/public/images/${req.body.photo}`, (err) =>
-		console.error('jimp write error: ', err)
-	);
+	// const photo = await jimp.read(req.file.buffer);
+	// await photo.resize(800, jimp.AUTO);
+	// await photo.write(`../server/public/images/${req.body.photo}`, (err) =>
+	// 	console.error('jimp write error: ', err)
+	// );
 	// Once saved, keep going....
 	next();
 };
 
 exports.createCrag = async (req, res) => {
-	// console.log(req.body);
 	// req.body must be stringified in order to recieve image file
 	const obj = JSON.parse(JSON.stringify(req.body));
 	// function to Parse the location coordinates BACK into integers
@@ -78,6 +90,8 @@ exports.getCrags = async (req, res) => {
 		.sort({ created: -1 });
 	const countPromise = Crag.countDocuments();
 	const [crags, count] = await Promise.all([cragsPromise, countPromise]);
+	//Use forEach below to attach photo file to each
+	//crags.forEach((x) => {x.newElement = 'Hi'})
 	const pages = Math.ceil(count / limit);
 	const data = {
 		crags: crags,
@@ -85,7 +99,6 @@ exports.getCrags = async (req, res) => {
 		pages: pages,
 		count: count,
 	};
-	// console.log(data);
 	res.send(data);
 };
 
@@ -94,8 +107,7 @@ exports.editCrag = async (req, res) => {
 	const crag = await Crag.findOne({ _id: req.params.id });
 	res.json(crag);
 	//confirm they are the user
-	// THIS IS STILL TODO
-	//render out the edit form so the user can update their store
+	// THIS IS STILL TODO ?
 };
 
 exports.updateCrag = async (req, res) => {
@@ -120,10 +132,8 @@ exports.updateCrag = async (req, res) => {
 	const cragsWithSlug = await Crag.find({ slug: slugRegEx });
 	if (cragsWithSlug.length) {
 		cragToBeEdited.slug = `${cragSlug}-${cragsWithSlug.length + 1}`;
-		// console.log(cragToBeEdited.slug);
 	} else {
 		cragToBeEdited.slug = cragSlug;
-		// console.log(cragToBeEdited.slug);
 	}
 	// find and update the crag
 	const crag = await Crag.findOneAndUpdate(
@@ -149,7 +159,6 @@ exports.getCragBySlug = async (req, res) => {
 };
 
 exports.searchCrags = async (req, res) => {
-	// console.log(req.query.q);
 	const crags = await Crag
 		// Find crags first
 		.find(
@@ -168,7 +177,6 @@ exports.searchCrags = async (req, res) => {
 		})
 		// limit the number of crags returned
 		.limit(5);
-	// console.log(crags);
 	res.send(crags);
 };
 
@@ -188,7 +196,7 @@ exports.mapCrags = async (req, res) => {
 	};
 
 	const crags = await Crag.find(q).select(
-		'cragName location difficulty photo slug minDifficulty maxDifficulty'
+		'cragName location difficulty photo s3photo slug minDifficulty maxDifficulty'
 	);
 	res.send(crags);
 };
@@ -206,8 +214,6 @@ exports.likeCrag = async (req, res) => {
 		{ [cragOperator]: { likes: req.body.userId } },
 		{ new: true }
 	);
-	// console.log(cragToUpdate);
-
 	// Add/Remove liked crags from user profile
 	const likes = user.likes.map((obj) => obj.toString());
 	const operator = likes.includes(req.params.id) ? '$pull' : '$addToSet';

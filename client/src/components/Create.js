@@ -404,7 +404,7 @@ export default class Create extends Component {
 					coordinates: this.props.cragCardInfo.data.location
 						.coordinates,
 				},
-				photo: this.props.cragCardInfo.data.photo,
+				photo: this.props.cragCardInfo.data.s3photo,
 				freeAllDay: this.props.cragCardInfo.data.freeAllDay,
 				busyWeekend: this.props.cragCardInfo.data.busyWeekend,
 				avoidRush: this.props.cragCardInfo.data.avoidRush,
@@ -626,6 +626,7 @@ export default class Create extends Component {
 							name='photo'
 							accept='image/gif, image/png, image/jpeg'
 							onChange={this.onChangePhoto}
+							required
 						/>
 						{this.state.photoLoaded && (
 							<PhotoLoaded

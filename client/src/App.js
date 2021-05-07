@@ -122,7 +122,6 @@ class App extends Component {
 				this.setState({
 					autoLoggedOut: true,
 				});
-				console.log('Auto Logged Out');
 			})
 			.catch((err) => console.log(err));
 		this.setState({

@@ -16,10 +16,6 @@ const cragSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 		},
-		// difficulty: {
-		// 	type: String,
-		// 	required: 'Please let us know the overall grade for the crag',
-		// },
 		minDifficulty: {
 			type: Number,
 			required:
@@ -56,6 +52,9 @@ const cragSchema = new mongoose.Schema(
 			],
 		},
 		photo: {
+			type: String,
+		},
+		s3photo: {
 			type: String,
 		},
 		author: {

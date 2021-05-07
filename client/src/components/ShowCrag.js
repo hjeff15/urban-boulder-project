@@ -269,9 +269,9 @@ class ShowCrag extends Component {
 			console.log('component has been updated');
 		}
 	}
-
-	async fetchData() {
-		const response = await axios
+	// This function used to be async/await, but caused 'Warning: Can’t perform a React state update on an unmounted component.' error.
+	fetchData() {
+		const response = axios
 			.get(
 				`${process.env.REACT_APP_SERVER}${this.props.location.pathname}`
 			)
@@ -331,7 +331,7 @@ class ShowCrag extends Component {
 							}
 						/>
 						<CragImage
-							src={`${process.env.REACT_APP_SERVER}/images/${this.state.crag.data.photo}`}
+							src={`https://urban-boulder-project.s3.eu-west-2.amazonaws.com/${this.state.crag.data.s3photo}`}
 							alt='crag'
 						/>
 						{/* <CragLikes> */}

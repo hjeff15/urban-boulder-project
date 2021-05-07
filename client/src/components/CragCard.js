@@ -202,7 +202,7 @@ class CragCard extends Component {
 				{this.props.cragInfo.photo && (
 					<CragImage
 						// src={`../assets/images/${this.props.cragInfo.photo}`}
-						src={`${process.env.REACT_APP_SERVER}/images/${this.props.cragInfo.photo}`}
+						src={`https://urban-boulder-project.s3.eu-west-2.amazonaws.com/${this.props.cragInfo.s3photo}`}
 						width={300}
 						alt='cragImage'
 					/>
