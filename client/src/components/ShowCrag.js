@@ -132,6 +132,9 @@ const CragImage = styled.img`
 	@media (max-width: 700px) {
 		object-fit: contain;
 	}
+	@media (max-width: 400px) {
+		height: 40vh;
+	}
 `;
 
 const CragDiff = styled.p`

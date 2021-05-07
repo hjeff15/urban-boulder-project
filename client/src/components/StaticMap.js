@@ -16,6 +16,10 @@ const MapImage = styled.img`
 	@media (max-width: 900px) {
 		width: 100%;
 	}
+	@media (max-width: 400px) {
+		height: 20vh;
+		/* width: 50vw; */
+	}
 `;
 
 export default class StaticMap extends Component {
