@@ -571,12 +571,11 @@ export default class Create extends Component {
 						</LocationLabel>
 						<LatTitle htmlFor='lat'>Latitude: </LatTitle>
 						<LatInput
-							type='number'
+							type='text'
 							required
 							placeholder='What is the Latitude?'
 							id='lat'
 							name='lat'
-							step='0.01'
 							defaultValue={
 								this.state.location.coordinates[1]
 									? this.state.location.coordinates[1]
@@ -586,7 +585,7 @@ export default class Create extends Component {
 						/>
 						<LngTitle htmlFor='lng'>Longitude: </LngTitle>
 						<LngInput
-							type='number'
+							type='text'
 							required
 							placeholder='What is the Longitude?'
 							id='lng'
