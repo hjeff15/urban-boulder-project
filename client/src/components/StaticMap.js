@@ -10,7 +10,7 @@ const MapImage = styled.img`
 	justify-self: center;
 	align-self: center;
 	object-fit: cover;
-	width: 95%;
+	width: 100%;
 	height: 95%;
 	border-radius: 5px;
 	@media (max-width: 900px) {
@@ -18,7 +18,6 @@ const MapImage = styled.img`
 	}
 	@media (max-width: 400px) {
 		height: 20vh;
-		/* width: 50vw; */
 	}
 `;
 

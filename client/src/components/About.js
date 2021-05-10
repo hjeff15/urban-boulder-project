@@ -115,6 +115,11 @@ export default class About extends Component {
 							Climbs MUST NOT cause distruction or a public
 							disturbance.
 						</li>
+						<li>
+							Give credit where credit is due. If you know the
+							person who got the first ascent (and they don't
+							mind), give them a shout in the comments section.
+						</li>
 						<li>Lastly, have fun!</li>
 					</List>
 					<Subtitle>Final Thought</Subtitle>

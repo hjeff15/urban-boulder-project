@@ -184,11 +184,6 @@ class CragCard extends Component {
 									.slice(0, 11)
 									.join('')
 									.toUpperCase() + '...'}
-						{/* {this.props.cragInfo.cragName
-							.split(' ')
-							.splice(0, 2)
-							.join(' ')
-							.toUpperCase()} */}
 					</CardATag>
 				</CardTitle>
 
@@ -208,11 +203,11 @@ class CragCard extends Component {
 					/>
 				)}
 				<CragDescription>
-					{this.props.cragInfo.cragDescription.split('').length < 25
+					{this.props.cragInfo.cragDescription.split('').length < 40
 						? this.props.cragInfo.cragDescription
 						: this.props.cragInfo.cragDescription
 								.split('')
-								.slice(0, 25)
+								.slice(0, 39)
 								.join('') + '...'}
 				</CragDescription>
 				<CragDifficulty>

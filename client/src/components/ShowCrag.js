@@ -134,6 +134,7 @@ const CragImage = styled.img`
 	}
 	@media (max-width: 400px) {
 		height: 40vh;
+		object-fit: cover;
 	}
 `;
 

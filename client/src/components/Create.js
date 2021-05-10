@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import FormError from './FormError';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 //Components
 import { striptags } from 'striptags';
 import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
@@ -389,6 +390,7 @@ export default class Create extends Component {
 			minDifficulty: 2,
 			maxDifficulty: 9,
 			formError: false,
+			loading: false,
 		};
 	}
 
@@ -484,63 +486,44 @@ export default class Create extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-
-		const photoData = new FormData();
-		photoData.append('photo', this.state.photo);
-		photoData.append('cragName', striptags(this.state.cragName));
-		photoData.append(
+		this.setState({ loading: true });
+		const cragData = new FormData();
+		cragData.append('photo', this.state.photo);
+		cragData.append('cragName', striptags(this.state.cragName));
+		cragData.append(
 			'cragDescription',
 			striptags(this.state.cragDescription)
 		);
-		// photoData.append('difficulty', this.state.difficulty);
-		photoData.append('minDifficulty', this.state.minDifficulty);
-		photoData.append('maxDifficulty', this.state.maxDifficulty);
-		photoData.append(
+		cragData.append('minDifficulty', this.state.minDifficulty);
+		cragData.append('maxDifficulty', this.state.maxDifficulty);
+		cragData.append(
 			'location[coordinates]',
 			this.state.location.coordinates
 		);
-		photoData.append('freeAllDay', this.state.freeAllDay);
-		photoData.append('busyWeekend', this.state.busyWeekend);
-		photoData.append('avoidRush', this.state.avoidRush);
-		photoData.append('author', this.props.user._id);
+		cragData.append('freeAllDay', this.state.freeAllDay);
+		cragData.append('busyWeekend', this.state.busyWeekend);
+		cragData.append('avoidRush', this.state.avoidRush);
+		cragData.append('author', this.props.user._id);
 
 		if (this.props.postData) {
-			photoData.append('_id', this.props.cragCardInfo.data._id);
+			cragData.append('_id', this.props.cragCardInfo.data._id);
 			const id = this.props.cragCardInfo.data._id;
-			this.props.postData(photoData, id);
+			this.props.postData(cragData, id);
 		} else {
 			axios
-				.post(`${process.env.REACT_APP_SERVER}/createCrag`, photoData)
+				.post(`${process.env.REACT_APP_SERVER}/createCrag`, cragData)
 				.then((res) => {
-					// console.log(res);
 					this.props.history.push(`/crag/${res.data.slug}`, {
 						msg: 'Crag successfully created!',
 					});
-					// return res.data;
 				})
 				.catch((err) => {
 					console.log(err);
 					this.setState({
 						formError: true,
+						loading: false,
 					});
 				});
-			// Is this code below why there is a double render after create is made?
-			this.setState({
-				cragName: '',
-				cragDescription: '',
-				// difficulty: '',
-				minDifficulty: 2,
-				maxDifficulty: 9,
-				location: {
-					coordinates: [],
-				},
-				photo: null,
-				photoPreviewURL: {},
-				photoLoaded: false,
-				freeAllDay: false,
-				busyWeekend: false,
-				avoidRush: false,
-			});
 		}
 	};
 
@@ -755,14 +738,28 @@ export default class Create extends Component {
 					</Option3>
 
 					<CreateBtnArea>
-						<CreateBtn
-							type='submit'
-							value={
-								this.props.cragCardInfo
-									? 'Edit Crag'
-									: 'Create Crag'
-							}
-						/>
+						{!this.state.loading ? (
+							<CreateBtn
+								type='submit'
+								value={
+									this.props.cragCardInfo
+										? 'Edit Crag'
+										: 'Create Crag'
+								}
+							/>
+						) : (
+							<Loader
+								type='TailSpin'
+								color='#d9b92e'
+								height={100}
+								width={100}
+								style={{
+									display: 'grid',
+									justifySelf: 'center',
+									gridArea: 'create-btn',
+								}}
+							/>
+						)}
 					</CreateBtnArea>
 				</FormContainer>
 			</Container>

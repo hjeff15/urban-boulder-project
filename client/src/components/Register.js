@@ -155,7 +155,7 @@ const ConfirmInput = styled.input`
 	grid-area: confirm-password-input;
 	width: 22rem;
 	height: 1.4rem;
-	font-size: 1rem;
+	font-size: 1.4rem;
 	justify-self: start;
 	@media (max-width: 680px) {
 		margin-bottom: 10px;

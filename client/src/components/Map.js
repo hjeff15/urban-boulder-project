@@ -127,7 +127,7 @@ const center = {
 	lng: -0.11610419428800553,
 };
 
-const radius = 5000; //km (I think...) could change dynamically???
+const radius = 10000; //km (I think...) could change dynamically???
 // const zoomLevel = 14;
 
 const options = {
@@ -222,7 +222,7 @@ export default function Map() {
 			<Search panTo={panTo} setUserRadius={setUserRadius} />
 			<GoogleMap
 				mapContainerStyle={containerStyle}
-				zoom={13}
+				zoom={11}
 				center={center}
 				options={options}
 				onLoad={onMapLoad}
@@ -328,7 +328,7 @@ function Search({ panTo, setUserRadius }) {
 			<RadiusSelect
 				name='distance'
 				id='distance'
-				defaultValue='5000'
+				defaultValue='10000'
 				onChange={(e) => {
 					setUserRadius(e.target.value);
 					// console.log(e.target.value);

@@ -74,10 +74,11 @@ const WelcomeMsg = styled.h4`
 
 const LoginMsg = styled.h3`
 	color: green;
-	margin-top: 0px;
 	justify-self: center;
+	align-self: center;
 	@media (max-width: 300px) {
 		font-size: 0.9rem;
+		margin-top: 10px;
 	}
 `;
 
